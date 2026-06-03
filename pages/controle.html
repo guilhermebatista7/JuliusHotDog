@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juliu's ADM | Gestão Total</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/controle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="admin-body">
+
+    <header class="main-header">
+    <div class="header-content">
+        <a href="../index.html" class="logo-container">
+            <img src="../img/logo.png" alt="Juliu's Logo" class="main-logo"></a>
+        <nav class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="../index.html">VOLTAR AO SITE</a></li>
+                <li><a href="controle.html" class="active-link">CONTROLE</a></li>
+
+                <li class="user-info">
+                    ADM: <strong>Juliu's</strong>
+                    <i class="fas fa-crown"
+                       style="color: gold; margin-left: 5px;"></i>
+                </li>
+            </ul>
+        </nav>
+        <button class="hamburger" id="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </button>
+    </div>
+</header>
+
+    <main class="admin-layout">
+        <aside class="sidebar">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-produtos')">
+                <i class="fas fa-hotdog"></i> Cardápio
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-insumos')">
+                <i class="fas fa-box"></i> Insumos
+            </button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-vendas')">
+                <i class="fas fa-chart-line"></i> Relatórios
+            </button>
+        </aside>
+
+        <section class="content-area">
+            <div id="tab-produtos" class="tab-content active">
+                <div class="header-flex">
+                    <h2>Gestão de Cardápio</h2>
+                    <button class="btn-add-premium" onclick="openModal('modalProduto')">
+                        <i class="fas fa-plus"></i> NOVO PRODUTO
+                    </button>
+                </div>
+                <div id="render-produtos" class="products-grid"></div>
+            </div>
+
+            <div id="tab-insumos" class="tab-content">
+                <div class="header-flex">
+                    <h2>Estoque de Insumos</h2>
+                    <button class="btn-add-premium" onclick="openModal('modalInsumo')">
+                        <i class="fas fa-plus-circle"></i> NOVO INSUMO
+                    </button>
+                </div>
+                <div id="render-insumos" class="insumos-grid"></div>
+            </div>
+
+            <div id="tab-vendas" class="tab-content">
+                <div class="header-flex">
+                    <h2>Performance Financeira</h2>
+                </div>
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <div class="icon-circle money"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="report-info">
+                            <span>Faturamento</span>
+                            <h3 id="fat-hoje">R$ 0,00</h3>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <div class="icon-circle orders"><i class="fas fa-shopping-basket"></i></div>
+                        <div class="report-info">
+                            <span>Pedidos</span>
+                            <h3 id="total-pedidos">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modalProduto" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modalProduto')">&times;</span>
+            <h2 id="modal-prod-title">Produto</h2>
+            <form id="form-produto" onsubmit="salvarProduto(event)">
+                <input type="hidden" id="prod-id">
+                <div class="input-group-admin">
+                    <label>Nome</label>
+                    <input type="text" id="prod-nome" required>
+                </div>
+                <div class="input-group-admin">
+                    <label>Descrição</label>
+                    <textarea id="prod-desc" rows="3" required></textarea>
+                </div>
+                <div class="input-group-admin">
+                    <label>Preço (R$)</label>
+                    <input type="number" id="prod-preco" step="0.01" required>
+                </div>
+                <div class="input-group-admin">
+                    <label>Estoque</label>
+                    <input type="number" id="prod-estoque" step="1" min="0" required>
+                </div>
+                <button type="submit" class="btn-save">SALVAR NO CARDÃPIO</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalInsumo" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modalInsumo')">&times;</span>
+            <h2>Novo Insumo</h2>
+            <form onsubmit="adicionarInsumo(event)">
+                <div class="input-group-admin">
+                    <label>Nome do Insumo</label>
+                    <input type="text" id="ins-nome" required>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="input-group-admin" style="flex:1">
+                        <label>Qtd</label>
+                        <input type="number" id="ins-qtd" step="0.1" required>
+                    </div>
+                    <div class="input-group-admin" style="flex:1">
+                        <label>Unid</label>
+                        <select id="ins-unid">
+                            <option value="KG">KG</option>
+                            <option value="UN">UN</option>
+                            <option value="LT">LT</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-save">ADICIONAR AO ESTOQUE</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/controle.js"></script>
+</body>
+</html>

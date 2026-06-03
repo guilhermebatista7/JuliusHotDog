@@ -1,0 +1,574 @@
+/* --- VARIÁVEIS E RESET --- */
+:root {
+    --fire: #793011;
+    --dark: #000000;
+    --card: #121212;
+    --yellow: #ffbf1f;
+    --gold: #ffffff;
+    --green: #4ec915;
+    --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    background-color: var(--dark);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+}
+
+
+.active-link {
+    color: var(--julius-yellow) !important;
+}
+
+/* --- HEADER & NAVEGAÇÃO --- */
+.main-header {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 15px 5%;
+    position: fixed; 
+    width: 100%; 
+    top: 0; 
+    z-index: 1000;
+    border-bottom: 2px solid var(--fire);
+}
+
+.header-content {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    max-width: 1300px; 
+    margin: 0 auto;
+}
+
+.logo-container{
+    flex: 0 0 auto;
+}
+
+.nav-menu{
+    margin-left: auto;
+}
+
+
+.main-logo { 
+    height: 60px; 
+    transition: var(--transition); 
+}
+
+.nav-menu ul { 
+    display: flex; 
+    list-style: none; 
+    gap: 30px; 
+    align-items: center; 
+}
+
+.nav-menu a {
+    color: white; 
+    text-decoration: none; 
+    font-weight: 800; 
+    font-size: 0.9rem;
+    letter-spacing: 2px; 
+    transition: 0.3s;
+}
+
+.nav-menu a.active-link {
+    color: var(--yellow) !important;
+}
+
+.nav-menu a:hover {
+    color: var(--fire);
+    transform: scale(1.1);
+}
+
+/* --- SISTEMA DE CONTADORES (BADGES) --- */
+/* Estilo base para ambos os contadores */
+#cart-count, #cart-count2 {
+    background-color: var(--green);
+    color: white;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    display: none; /* Controlado pelo JS */
+    justify-content: center;
+    align-items: center;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--dark);
+    z-index: 10;
+}
+
+/* Carrinho Desktop */
+.cart-btn {
+    position: relative; /* Pai relativo para o contador se fixar nele */
+    background: var(--fire); 
+    padding: 10px 20px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    display: flex; 
+    gap: 10px;
+    align-items: center;
+    transition: 0.4s;
+}
+
+.cart-btn:hover {
+    background: var(--gold);
+    color: var(--dark);
+}
+
+#cart-count {
+    top: -8px;
+    right: -8px;
+}
+
+/* Menu Hambúrguer Mobile */
+.hamburger {
+    display: none; 
+    background: none; 
+    border: none; 
+    cursor: pointer;
+    flex-direction: column; 
+    gap: 6px; 
+    z-index: 2100;
+    position: relative; /* Pai relativo para o contador 2 */
+}
+
+#cart-count2 {
+    top: -8px;
+    right: -10px;
+}
+
+.line { 
+    width: 30px; 
+    height: 3px; 
+    background: white; 
+    transition: 0.3s; 
+}
+
+/* --- HERO SECTION --- */
+.hero {
+    height: 100vh;
+    background: url("../img/logo.png") center no-repeat;
+    background-size: 40%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    text-align: center; 
+    position: relative;
+    padding-top: 100px;
+    margin-top: 60px;
+}
+
+.hero-overlay {
+    position: absolute; 
+    inset: 0;
+    background: linear-gradient(to top, var(--dark) 20%, transparent);
+}
+
+.hero-content { 
+    position: relative; 
+    z-index: 1; 
+    margin-top: 200px; 
+}
+
+.hero-content h1 { 
+    font-size: clamp(2.5rem, 8vw, 5rem); 
+    line-height: 0.9; 
+    margin-bottom: 30px; 
+}
+
+.hero-content h1 span { 
+    color: var(--fire); 
+    display: block; 
+}
+
+/* --- CARDS DE PRODUTOS --- */
+.container { 
+    padding: 80px 5%; 
+    max-width: 1300px; 
+    margin: 0 auto; 
+}
+
+.section-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.divider {
+    height: 4px;
+    width: 60px;
+    background: var(--fire);
+    margin: 10px auto;
+}
+
+.grid-cards { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 25px; 
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid #222;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.5s ease;
+    animation: floating 3s ease-in-out infinite;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+}
+
+.card:nth-child(even) { animation-delay: 1s; }
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.card:hover {
+    animation-play-state: paused;
+    border-color: var(--fire);
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(121, 48, 17, 0.4);
+}
+
+.card img { 
+    width: 100%; 
+    height: auto; 
+    object-fit: contain; 
+    margin-bottom: 15px; 
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+}
+
+/* --- BOTÕES --- */
+.btn-primary, .btn-checkout {
+    background: var(--fire); 
+    color: white; 
+    border: none; 
+    padding: 15px;
+    font-weight: 800; 
+    cursor: pointer; 
+    text-decoration: none; 
+    width: 100%;
+    transition: 0.3s;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.btn-primary:hover { 
+    filter: brightness(1.2); 
+    letter-spacing: 1px; 
+}
+
+/* --- MODAL DO CARRINHO (SIDE PANEL) --- */
+.cart-modal {
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.8);
+    display: none; 
+    justify-content: flex-end; 
+    z-index: 3000;
+}
+
+.cart-side-panel {
+    width: 100%; 
+    max-width: 400px; 
+    background: #0a0a0a; 
+    height: 100%;
+    padding: 30px; 
+    display: flex; 
+    flex-direction: column;
+    border-left: 3px solid var(--fire);
+}
+
+.cart-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 30px; 
+}
+
+.close-btn { 
+    background: none; 
+    border: none; 
+    color: white; 
+    font-size: 2.5rem; 
+    cursor: pointer; 
+}
+
+.cart-body { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding-right: 10px; 
+}
+
+#order-note {
+    width: 100%; 
+    height: 80px; 
+    background: #111; 
+    border: 1px solid #333;
+    color: white; 
+    padding: 10px; 
+    border-radius: 8px; 
+    margin: 15px 0; 
+    resize: none;
+}
+
+/* --- MAPA --- */
+.map-container {
+    width: 92%;
+    max-width: 1100px; 
+    margin: 40px auto;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid var(--fire);
+    aspect-ratio: 16 / 9;
+}
+
+.map-container iframe {
+    width: 100%; 
+    height: 100%; 
+    border: 0;
+    filter: grayscale(100%) invert(90%);
+    transition: 0.5s;
+}
+
+.map-container:hover iframe { filter: grayscale(0%) invert(0%); }
+
+/* --- RESPONSIVIDADE (MOBILE) --- */
+@media (max-width: 768px) {
+    .hamburger { display: flex; }
+
+    .nav-menu {
+        position: fixed; 
+        top: 0; 
+        right: -100%; 
+        width: 100%; 
+        height: 100vh;
+        background: var(--dark); 
+        display: flex; 
+        justify-content: center;
+        align-items: center; 
+        transition: var(--transition); 
+        z-index: 2000;
+    }
+
+    .nav-menu.active { right: 0; }
+
+    .nav-menu ul { 
+        flex-direction: column; 
+        gap: 40px; 
+    }
+
+    .nav-menu a { font-size: 1.5rem; }
+
+    .hero { background-size: 80%; height: 60vh; }
+    
+    .map-container { aspect-ratio: 4 / 3; }
+}
+
+/*Iframe*/
+/* Container do Mapa */
+.map-responsive-container {
+    position: relative;
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 3px solid var(--fire); /* Borda na cor do tema */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    
+    /* Mantém a proporção 16:9 automaticamente */
+    aspect-ratio: 16 / 9;
+    
+    /* Animação de entrada */
+    animation: slideUp 1s ease-out;
+}
+
+.map-responsive-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    
+    /* Efeito Dark Mode no Mapa */
+    filter: grayscale(100%) invert(90%) contrast(90%);
+    transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s ease;
+}
+
+/* Efeito ao passar o mouse */
+.map-responsive-container:hover iframe {
+    /* O mapa volta a ser colorido e foca levemente */
+    filter: grayscale(0%) invert(0%) contrast(100%);
+    transform: scale(1.02);
+}
+
+/* Animação de surgimento */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ajustes para Mobile */
+@media (max-width: 768px) {
+    .map-responsive-container {
+        width: 70%;
+        aspect-ratio: 4 / 3; /* Proporção mais quadrada para celular */
+        margin: 20px auto;
+        border-width: 2px;
+    }
+}
+
+/*Footer*/
+/* --- FOOTER --- */
+.main-footer {
+    background-color: #050505;
+    padding: 80px 5% 20px;
+    border-top: 3px solid var(--fire);
+    margin-top: 50px;
+}
+
+.footer-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap; /* Garante que as colunas quebrem no mobile */
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-logo {
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.footer-description {
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.footer-column h3 {
+    color: var(--fire);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.footer-column h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--fire);
+}
+
+/* Links e Listas */
+.footer-links, .footer-contact {
+    list-style: none;
+}
+
+.footer-links li, .footer-contact li {
+    margin-bottom: 15px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: #888;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+    padding-left: 5px;
+}
+
+.footer-contact i {
+    color: var(--fire);
+}
+
+/* Redes Sociais */
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    background: #111;
+    border: 1px solid #222;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: 0.4s;
+}
+
+.social-links a:hover {
+    background: var(--fire);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(121, 48, 17, 0.4);
+}
+
+/* Rodapé Final */
+.footer-bottom {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #111;
+    color: #444;
+    font-size: 0.85rem;
+}
+
+/* Ajustes Mobile */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-column h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .footer-links li, .footer-contact li {
+        justify-content: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}

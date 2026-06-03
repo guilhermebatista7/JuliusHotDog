@@ -1,0 +1,24 @@
+{
+  "name": "julios-hot-dog",
+  "version": "1.0.0",
+  "description": "Back-end MVC em Node.js com Supabase e WhatsApp Cloud API para o projeto Julio's Hot Dog.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "supabase",
+    "whatsapp",
+    "mvc"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

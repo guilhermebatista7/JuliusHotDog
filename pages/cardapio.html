@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio | Juliu's Hot Dog</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cardapio.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <a href="../index.html">
+                    <img src="../img/logo.png" alt="Julio's Logo" class="main-logo">
+                </a>
+            </div>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul>
+                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="cardapio.html" class="active-link">CARDÁPIO</a></li>
+                    <li><a href="login.html">LOGIN</a></li>
+                    <li><a href="controle.html">CONTROLE</a></li>
+                    <li class="cart-btn" onclick="location.href='carrinho.html'">
+                        <img src="../img/carrinho-de-compras.png" alt="Carrinho" class="icon-cart" style="width: 30px; height: 30px;">
+                        <span id="cart-count">0</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <button class="hamburger" id="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <span id="cart-count2">0</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="menu-hero">
+        <div class="menu-hero-overlay"></div>
+        <div class="menu-hero-content">
+            <p class="menu-tag">feito na brasa • artesanal</p>
+            <h1>Cardápio Juliu's</h1>
+            <p>Escolha seu hot dog, adicione ao carrinho e finalize seu pedido.</p>
+        </div>
+    </section>
+
+    <main class="menu-page-container">
+        <section class="menu-controls">
+            <div class="category-buttons" aria-label="Filtros do cardápio">
+                <button class="category-btn active" data-category="todos">Todos</button>
+                <button class="category-btn" data-category="hotdog">Hot Dogs</button>
+                <button class="category-btn" data-category="bebida">Bebidas</button>
+            </div>
+        </section>
+
+        <section class="menu-grid" id="menuGrid"></section>
+    </main>
+
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-side-panel">
+            <div class="cart-header">
+                <h3>SEU PEDIDO</h3>
+                <button class="close-btn" onclick="toggleCart()">X</button>
+            </div>
+            <div id="cart-items-list" class="cart-body"></div>
+            <div class="cart-footer">
+                <div class="total-box">
+                    <span>TOTAL</span>
+                    <span id="cart-total">R$ 0,00</span>
+                </div>
+                <textarea id="order-note" placeholder="Alguma observação?"></textarea>
+                <a class="btn-checkout" href="carrinho.html">VER CARRINHO COMPLETO</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <img src="../img/logo.png" alt="Juliu's Logo" class="footer-logo">
+                <p class="footer-description">O verdadeiro hot dog artesanal feito na brasa.</p>
+            </div>
+
+            <div class="footer-column">
+                <h3>NAVEGAÇÃO</h3>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="cardapio.html">Cardápio</a></li>
+                    <li><a href="login.html">Minha Conta</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>CONTATO</h3>
+                <ul class="footer-contact">
+                    <li><i class="fas fa-map-marker-alt"></i> Rua Cypriano Lachi, Praça CETEC, Catanduva-SP</li>
+                    <li><i class="fas fa-phone"></i> (17) 99119-4014</li>
+                    <li><i class="fas fa-clock"></i> Seg - Sex: 18h às 23h</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Juliu's Hot Dog</p>
+        </div>
+    </footer>
+
+    <script src="../js/cardapio.js"></script>
+</body>
+</html>

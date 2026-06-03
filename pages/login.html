@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julio's | Acesso</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="login-body">
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <a href="../index.html"><img src="../img/logo.png" alt="Juliu's Logo" class="main-logo"></a>
+            </div>
+
+            <nav class="nav-menu" id="navMenu">
+                <ul>
+                    <li><a href="../index.html">HOME</a></li>
+                    <li><a href="login.html" class="active-link">LOGIN</a></li>
+                </ul>
+            </nav>
+
+            <button class="hamburger" id="hamburger">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </button>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <div class="flip-card" id="flipCard">
+            
+            <div class="card-front">
+                <div class="card-content">
+                    <span class="loader-emoji"><img src="../img/hot-dog.png" alt="" style="width: 40px;"></span>
+                    <h2>BEM-VINDO</h2>
+                    <p>Acesse sua conta para pedir</p>
+                    <form id="login-form" onsubmit="return false;">
+                        <div class="input-group">
+                            <input type="email" id="login-email" placeholder="E-mail" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="login-password" placeholder="Senha" required>
+                        </div>
+                        <button type="submit" class="btn-login">ENTRAR</button>
+                    </form>
+                    <p class="switch-text">Não tem conta? <a href="javascript:void(0)" onclick="toggleCard()">Cadastre-se</a></p>
+                </div>
+            </div>
+
+            <div class="card-back">
+                <div class="card-content">
+                    <span class="loader-emoji"><img src="../img/hot-dog.png" alt="" style="width: 40px;"></span>
+                    <h2>CADASTRO</h2>
+                    <p>Crie sua conta rapidinho</p>
+                    <form id="register-form" onsubmit="return false;">
+                        <div class="input-group">
+                            <input type="text" id="register-name" placeholder="Nome Completo" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" id="register-email" placeholder="E-mail" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="tel" id="register-phone" placeholder="Telefone com DDD" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="register-password" placeholder="Crie uma Senha" required>
+                        </div>
+                        <button type="submit" class="btn-login">CRIAR CONTA</button>
+                    </form>
+                    <p class="switch-text">Já é de casa? <a href="javascript:void(0)" onclick="toggleCard()">Faça Login</a></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        function toggleCard() {
+            document.getElementById('flipCard').classList.toggle('flipped');
+        }
+
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        if (hamburger) {
+            hamburger.onclick = () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            };
+        }
+
+        window.addEventListener('load', () => {
+            const emojis = document.querySelectorAll('.loader-emoji');
+            emojis.forEach((el) => el.classList.add('spinning'));
+
+            setTimeout(() => {
+                emojis.forEach((el) => {
+                    el.classList.remove('spinning');
+                    el.classList.add('stop-spin');
+                });
+            }, 1500);
+        });
+    </script>
+    <script src="../js/api.js"></script>
+    <script src="../js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+:root {
+    --yellow: #ffbf1f;
+    --bg-dark: #0a0a0a;
+    --card-dark: #141414;
+    --accent-blue: #3498db;
+    --accent-gold: #793011;
+    --text-muted: #888;
+}
+
+.admin-body {
+    background: var(--bg-dark);
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+}
+
+.active-link {
+    color: var(--yellow) !important;
+}
+
+
+/* Layout */
+.admin-layout {
+    display: flex;
+    margin-top: 85px;
+    min-height: 90vh;
+    width: 100vw;
+}
+
+.sidebar {
+    width: 260px;
+    background: #111;
+    border-right: 1px solid #222;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.tab-btn {
+    width: 100%;
+    padding: 15px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tab-btn.active {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.content-area {
+    flex: 1;
+    padding: 30px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.4s;
+}
+
+.header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px; }
+
+/* GRID DE PRODUTOS E INSUMOS (ESTILO UNIFICADO) */
+.products-grid, .insumos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* ESTILO DO CARD (USADO POR AMBOS) */
+.product-card-adm, .insumo-card-adm {
+    background: var(--card-dark);
+    border: 1px solid #222;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.3s;
+}
+
+.product-card-adm:hover, .insumo-card-adm:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
+.product-card-adm h4, .insumo-card-adm h4 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; }
+.product-card-adm p, .insumo-card-adm p { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+
+.price, .stock-badge { 
+    color: #2ecc71; 
+    font-weight: bold; 
+    font-size: 1.1rem; 
+}
+
+.stock-badge { color: var(--accent-blue); }
+
+.card-actions {
+    margin-top: 15px; padding-top: 15px; border-top: 1px solid #222;
+    display: flex; justify-content: flex-end; gap: 15px;
+}
+
+/* RELATÓRIOS */
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+.report-card {
+    background: #111; padding: 25px; border-radius: 20px; border: 1px solid #222;
+    display: flex; align-items: center; gap: 20px;
+}
+.icon-circle {
+    width: 55px; height: 55px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+}
+.money { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+.orders { background: rgba(52, 152, 219, 0.1); color: #3498db; }
+
+/* Modais */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+.modal-content { background: #1a1a1a; padding: 30px; border-radius: 20px; width: 400px; border: 1px solid #333; }
+.close { float: right; cursor: pointer; font-size: 1.5rem; }
+
+.input-group-admin { margin-bottom: 15px; display: flex; flex-direction: column; }
+.input-group-admin input, .input-group-admin textarea, .input-group-admin select {
+    background: #000; border: 1px solid #333; padding: 12px; color: white; border-radius: 8px; margin-top: 5px;
+}
+
+.btn-add-premium { background: var(--accent-blue); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.btn-save { width: 100%; padding: 15px; background: var(--accent-blue); border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+/* Responsividade */
+@media (max-width: 850px) {
+    .admin-layout { flex-direction: column; }
+    .sidebar { width: 100%; display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid #222; }
+    .tab-btn { white-space: nowrap; margin-bottom: 0; }
+    .content-area { padding: 20px; }
+    .header-flex { flex-direction: column; align-items: flex-start; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
