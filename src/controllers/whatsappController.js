@@ -18,7 +18,9 @@ function getButtonReplyId(payload) {
   const messages = payload.entry?.[0]?.changes?.[0]?.value?.messages || [];
   const message = messages[0];
 
-  return message?.interactive?.button_reply?.id || null;
+  return message?.interactive?.button_reply?.id ||
+    message?.button?.payload ||
+    null;
 }
 
 async function receiveWebhook(req, res) {

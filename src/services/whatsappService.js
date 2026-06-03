@@ -43,8 +43,55 @@ function buildOrderSummary(orderRequest) {
   ].join('\n');
 }
 
-async function sendOrderApprovalMessage(orderRequest) {
-  return sendWhatsAppMessage({
+function buildOrderItemsText(orderRequest) {
+  return orderRequest.items
+    .map((item) => `${item.quantity}x ${item.productName}`)
+    .join(', ');
+}
+
+function buildTemplateMessage(orderRequest) {
+  return {
+    messaging_product: 'whatsapp',
+    to: env.juliusWhatsappNumber,
+    type: 'template',
+    template: {
+      name: env.whatsappOrderTemplateName,
+      language: {
+        code: env.whatsappTemplateLanguage
+      },
+      components: [
+        {
+          type: 'body',
+          parameters: [
+            { type: 'text', text: orderRequest.customer_name },
+            { type: 'text', text: buildOrderItemsText(orderRequest) },
+            { type: 'text', text: `R$ ${Number(orderRequest.total).toFixed(2)}` },
+            { type: 'text', text: orderRequest.notes || 'Nenhuma' }
+          ]
+        },
+        {
+          type: 'button',
+          sub_type: 'quick_reply',
+          index: '0',
+          parameters: [
+            { type: 'payload', payload: `accept_order_${orderRequest.id}` }
+          ]
+        },
+        {
+          type: 'button',
+          sub_type: 'quick_reply',
+          index: '1',
+          parameters: [
+            { type: 'payload', payload: `deny_order_${orderRequest.id}` }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+function buildInteractiveMessage(orderRequest) {
+  return {
     messaging_product: 'whatsapp',
     to: env.juliusWhatsappNumber,
     type: 'interactive',
@@ -72,7 +119,15 @@ async function sendOrderApprovalMessage(orderRequest) {
         ]
       }
     }
-  });
+  };
+}
+
+async function sendOrderApprovalMessage(orderRequest) {
+  const payload = env.whatsappOrderTemplateName
+    ? buildTemplateMessage(orderRequest)
+    : buildInteractiveMessage(orderRequest);
+
+  return sendWhatsAppMessage(payload);
 }
 
 module.exports = { sendOrderApprovalMessage };

@@ -24,5 +24,15 @@ services:
         value: julios_webhook_2026
       - key: JULIUS_WHATSAPP_NUMBER
         sync: false
+      - key: WHATSAPP_ORDER_TEMPLATE_NAME
+        sync: false
+      - key: WHATSAPP_TEMPLATE_LANGUAGE
+        value: pt_BR
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
       - key: DELIVERY_FEE
         value: 5
