@@ -21,7 +21,7 @@ services:
       - key: WHATSAPP_ACCESS_TOKEN
         sync: false
       - key: WHATSAPP_VERIFY_TOKEN
-        value: julius_webhook_2026
+        value: julios_webhook_2026
       - key: JULIUS_WHATSAPP_NUMBER
         sync: false
       - key: DELIVERY_FEE
