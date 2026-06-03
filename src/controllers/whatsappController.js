@@ -1,6 +1,9 @@
 const { env } = require('../config/env');
 const { acceptOrderRequest, denyOrderRequest } = require('../services/orderService');
-const { sendSms } = require('../services/smsService');
+const {
+  sendCustomerAcceptedMessage,
+  sendCustomerDeniedMessage
+} = require('../services/whatsappService');
 
 function verifyWebhook(req, res) {
   const mode = req.query['hub.mode'];
@@ -37,18 +40,12 @@ async function receiveWebhook(req, res) {
 
   if (action === 'accept') {
     const { orderRequest, order } = await acceptOrderRequest(orderRequestId);
-    await sendSms(
-      orderRequest.customer_phone,
-      `Seu pedido #${order.id} foi aceito pelo Julius. Total: R$ ${Number(order.total).toFixed(2)}.`
-    );
+    await sendCustomerAcceptedMessage(orderRequest, order);
   }
 
   if (action === 'deny') {
     const orderRequest = await denyOrderRequest(orderRequestId);
-    await sendSms(
-      orderRequest.customer_phone,
-      `Seu pedido #${orderRequest.id} foi negado pelo Julius.`
-    );
+    await sendCustomerDeniedMessage(orderRequest);
   }
 
   return res.sendStatus(200);

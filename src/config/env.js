@@ -11,6 +11,8 @@ const env = {
   whatsappVerifyToken: process.env.WHATSAPP_VERIFY_TOKEN || 'julios_webhook_2026',
   juliusWhatsappNumber: process.env.JULIUS_WHATSAPP_NUMBER || '',
   whatsappOrderTemplateName: process.env.WHATSAPP_ORDER_TEMPLATE_NAME || '',
+  whatsappAcceptedTemplateName: process.env.WHATSAPP_ACCEPTED_TEMPLATE_NAME || '',
+  whatsappDeniedTemplateName: process.env.WHATSAPP_DENIED_TEMPLATE_NAME || '',
   whatsappTemplateLanguage: process.env.WHATSAPP_TEMPLATE_LANGUAGE || 'pt_BR',
   twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || '',
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || '',

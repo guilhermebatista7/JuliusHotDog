@@ -122,6 +122,60 @@ function buildInteractiveMessage(orderRequest) {
   };
 }
 
+function normalizePhone(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
+
+async function sendCustomerTemplateMessage(to, templateName, parameters) {
+  const toNumber = normalizePhone(to);
+
+  if (!toNumber) {
+    console.warn('[WhatsApp feedback] Cliente sem telefone cadastrado.');
+    return;
+  }
+
+  if (!templateName) {
+    console.warn(`[WhatsApp feedback nao enviado] Template nao configurado para ${toNumber}.`);
+    return;
+  }
+
+  return sendWhatsAppMessage({
+    messaging_product: 'whatsapp',
+    to: toNumber,
+    type: 'template',
+    template: {
+      name: templateName,
+      language: {
+        code: env.whatsappTemplateLanguage
+      },
+      components: [
+        {
+          type: 'body',
+          parameters: parameters.map((text) => ({
+            type: 'text',
+            text: String(text)
+          }))
+        }
+      ]
+    }
+  });
+}
+
+async function sendCustomerAcceptedMessage(orderRequest, order) {
+  return sendCustomerTemplateMessage(orderRequest.customer_phone, env.whatsappAcceptedTemplateName, [
+    orderRequest.customer_name,
+    `#${order.id}`,
+    `R$ ${Number(order.total).toFixed(2)}`
+  ]);
+}
+
+async function sendCustomerDeniedMessage(orderRequest) {
+  return sendCustomerTemplateMessage(orderRequest.customer_phone, env.whatsappDeniedTemplateName, [
+    orderRequest.customer_name,
+    `#${orderRequest.id}`
+  ]);
+}
+
 async function sendOrderApprovalMessage(orderRequest) {
   const payload = env.whatsappOrderTemplateName
     ? buildTemplateMessage(orderRequest)
@@ -130,4 +184,8 @@ async function sendOrderApprovalMessage(orderRequest) {
   return sendWhatsAppMessage(payload);
 }
 
-module.exports = { sendOrderApprovalMessage };
+module.exports = {
+  sendCustomerAcceptedMessage,
+  sendCustomerDeniedMessage,
+  sendOrderApprovalMessage
+};

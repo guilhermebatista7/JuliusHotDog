@@ -26,6 +26,10 @@ services:
         sync: false
       - key: WHATSAPP_ORDER_TEMPLATE_NAME
         sync: false
+      - key: WHATSAPP_ACCEPTED_TEMPLATE_NAME
+        sync: false
+      - key: WHATSAPP_DENIED_TEMPLATE_NAME
+        sync: false
       - key: WHATSAPP_TEMPLATE_LANGUAGE
         value: pt_BR
       - key: TWILIO_ACCOUNT_SID
