@@ -47,11 +47,20 @@ async function receiveWebhook(req, res) {
 
   if (action === 'accept') {
     const { orderRequest, order } = await acceptOrderRequest(orderRequestId);
+    console.log('[WhatsApp webhook] Pedido aceito, enviando feedback:', {
+      orderRequestId,
+      orderId: order.id,
+      customerPhone: orderRequest.customer_phone
+    });
     await sendCustomerAcceptedMessage(orderRequest, order);
   }
 
   if (action === 'deny') {
     const orderRequest = await denyOrderRequest(orderRequestId);
+    console.log('[WhatsApp webhook] Pedido negado, enviando feedback:', {
+      orderRequestId,
+      customerPhone: orderRequest.customer_phone
+    });
     await sendCustomerDeniedMessage(orderRequest);
   }
 

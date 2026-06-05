@@ -149,6 +149,13 @@ function normalizePhone(phone) {
 async function sendCustomerTemplateMessage(to, templateName, parameters) {
   const toNumber = normalizePhone(to);
 
+  console.log('[WhatsApp feedback] Preparando feedback ao cliente:', {
+    rawPhone: to,
+    normalizedPhone: toNumber,
+    template: templateName || null,
+    language: env.whatsappTemplateLanguage
+  });
+
   if (!toNumber) {
     throw new HttpError(400, 'Cliente sem telefone cadastrado para receber feedback no WhatsApp.');
   }
