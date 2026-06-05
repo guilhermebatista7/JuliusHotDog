@@ -31,6 +31,13 @@ async function sendWhatsAppMessage(payload) {
     throw new HttpError(response.status, data?.error?.message || 'Nao foi possivel enviar mensagem no WhatsApp.');
   }
 
+  console.log('[WhatsApp] Mensagem enviada:', {
+    to: payload.to,
+    type: payload.type,
+    template: payload.template?.name,
+    messageId: data?.messages?.[0]?.id
+  });
+
   return data;
 }
 
@@ -143,14 +150,18 @@ async function sendCustomerTemplateMessage(to, templateName, parameters) {
   const toNumber = normalizePhone(to);
 
   if (!toNumber) {
-    console.warn('[WhatsApp feedback] Cliente sem telefone cadastrado.');
-    return;
+    throw new HttpError(400, 'Cliente sem telefone cadastrado para receber feedback no WhatsApp.');
   }
 
   if (!templateName) {
-    console.warn(`[WhatsApp feedback nao enviado] Template nao configurado para ${toNumber}.`);
-    return;
+    throw new HttpError(500, `Template de feedback nao configurado para enviar ao cliente ${toNumber}.`);
   }
+
+  console.log('[WhatsApp feedback] Enviando feedback ao cliente:', {
+    to: toNumber,
+    template: templateName,
+    language: env.whatsappTemplateLanguage
+  });
 
   return sendWhatsAppMessage({
     messaging_product: 'whatsapp',

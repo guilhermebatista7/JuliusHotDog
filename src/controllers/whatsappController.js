@@ -30,13 +30,20 @@ async function receiveWebhook(req, res) {
   const replyId = getButtonReplyId(req.body);
 
   if (!replyId) {
+    console.log('[WhatsApp webhook] Evento recebido sem botao de pedido.');
     return res.sendStatus(200);
   }
 
   const [, action, orderRequestId] = replyId.match(/^(accept|deny)_order_(\d+)$/) || [];
   if (!action || !orderRequestId) {
+    console.log('[WhatsApp webhook] Botao ignorado:', replyId);
     return res.sendStatus(200);
   }
+
+  console.log('[WhatsApp webhook] Acao recebida:', {
+    action,
+    orderRequestId
+  });
 
   if (action === 'accept') {
     const { orderRequest, order } = await acceptOrderRequest(orderRequestId);
