@@ -2,6 +2,16 @@ const HttpError = require('../utils/httpError');
 const { hashPassword, comparePassword } = require('../utils/password');
 const userModel = require('../models/UserModel');
 
+function normalizeBrazilPhone(phone) {
+  const digits = String(phone || '').replace(/\D/g, '');
+
+  if (digits.length === 10 || digits.length === 11) {
+    return `55${digits}`;
+  }
+
+  return digits;
+}
+
 function sanitizeUser(user) {
   if (!user) {
     return null;
@@ -29,7 +39,13 @@ async function registerUser({ name, email, password, phone }) {
   }
 
   const passwordHash = await hashPassword(password);
-  return userModel.create({ name, email, phone, passwordHash, role: 'customer' });
+  return userModel.create({
+    name,
+    email,
+    phone: normalizeBrazilPhone(phone),
+    passwordHash,
+    role: 'customer'
+  });
 }
 
 async function authenticateUser({ email, password }) {

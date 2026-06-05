@@ -21,6 +21,13 @@ async function sendWhatsAppMessage(payload) {
 
   const data = await response.json();
   if (!response.ok) {
+    console.error('[WhatsApp] Falha ao enviar mensagem:', {
+      status: response.status,
+      to: payload.to,
+      type: payload.type,
+      template: payload.template?.name,
+      error: data?.error
+    });
     throw new HttpError(response.status, data?.error?.message || 'Nao foi possivel enviar mensagem no WhatsApp.');
   }
 
@@ -123,7 +130,13 @@ function buildInteractiveMessage(orderRequest) {
 }
 
 function normalizePhone(phone) {
-  return String(phone || '').replace(/\D/g, '');
+  const digits = String(phone || '').replace(/\D/g, '');
+
+  if (digits.length === 10 || digits.length === 11) {
+    return `55${digits}`;
+  }
+
+  return digits;
 }
 
 async function sendCustomerTemplateMessage(to, templateName, parameters) {
