@@ -1,5 +1,5 @@
-const { env } = require('../config/env');
 const productModel = require('../models/ProductModel');
+const supplyModel = require('../models/SupplyModel');
 const orderModel = require('../models/OrderModel');
 const orderRequestModel = require('../models/OrderRequestModel');
 const HttpError = require('../utils/httpError');
@@ -27,27 +27,93 @@ async function buildOrderItems(items) {
       throw new HttpError(400, 'Quantidade invalida no pedido.');
     }
 
-    if (product.stock_quantity !== null && product.stock_quantity !== undefined && Number(product.stock_quantity) < quantity) {
-      throw new HttpError(400, `Estoque insuficiente para ${product.name}.`);
-    }
-
     detailedItems.push({
       productId: product.id,
       productName: product.name,
       unitPrice: Number(product.price),
       quantity,
-      currentStock: Number(product.stock_quantity ?? 0),
-      lineTotal: calculateLineTotal(product.price, quantity)
+      lineTotal: calculateLineTotal(product.price, quantity),
+      supplies: product.supplies || []
     });
   }
 
   return detailedItems;
 }
 
+async function buildSupplyUsage(items) {
+  const supplyIds = [
+    ...new Set(items.flatMap((item) => item.supplies.map((supply) => Number(supply.supply_id))))
+  ].filter(Boolean);
+
+  const supplies = await supplyModel.findByIds(supplyIds);
+  const suppliesById = supplies.reduce((acc, supply) => {
+    acc[supply.id] = supply;
+    return acc;
+  }, {});
+
+  return items.reduce((acc, item) => {
+    item.supplies.forEach((requirement) => {
+      if (!requirement.required) {
+        return;
+      }
+
+      const supplyId = Number(requirement.supply_id);
+      const supply = suppliesById[supplyId];
+      if (!supply) {
+        acc.missing.push(`insumo nao cadastrado para ${item.productName}`);
+        return;
+      }
+
+      if (supply.is_boolean) {
+        if (!supply.available) {
+          acc.missing.push(supply.name);
+        }
+        return;
+      }
+
+      const needed = Number(requirement.quantity_required || 0) * item.quantity;
+      const existing = acc.unitUsage[supplyId] || {
+        supply,
+        needed: 0
+      };
+      existing.needed += needed;
+      acc.unitUsage[supplyId] = existing;
+    });
+
+    return acc;
+  }, { missing: [], unitUsage: {} });
+}
+
+async function ensureSuppliesAvailable(items) {
+  const usage = await buildSupplyUsage(items);
+  const missing = [...usage.missing];
+
+  Object.values(usage.unitUsage).forEach(({ supply, needed }) => {
+    if (Number(supply.quantity) < needed) {
+      missing.push(`${supply.name} (${needed} necessario, ${Number(supply.quantity)} disponivel)`);
+    }
+  });
+
+  if (missing.length > 0) {
+    throw new HttpError(400, `Nao foi possivel enviar o pedido. Insumos faltantes: ${missing.join(', ')}.`);
+  }
+
+  return usage;
+}
+
+async function debitSupplies(items) {
+  const usage = await ensureSuppliesAvailable(items);
+
+  for (const { supply, needed } of Object.values(usage.unitUsage)) {
+    await supplyModel.updateQuantity(supply.id, Number(supply.quantity) - needed);
+  }
+}
+
 async function createOrder(payload) {
   const items = await buildOrderItems(payload.items);
+  await debitSupplies(items);
   const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
-  const deliveryFee = Number(payload.deliveryFee ?? env.deliveryFee);
+  const deliveryFee = 0;
   const total = subtotal + deliveryFee;
 
   const order = await orderModel.create({
@@ -62,17 +128,14 @@ async function createOrder(payload) {
     items
   });
 
-  for (const item of items) {
-    await productModel.updateStock(item.productId, item.currentStock - item.quantity);
-  }
-
   return order;
 }
 
 async function createOrderRequest(payload) {
   const items = await buildOrderItems(payload.items);
+  await ensureSuppliesAvailable(items);
   const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
-  const deliveryFee = Number(payload.deliveryFee ?? env.deliveryFee);
+  const deliveryFee = 0;
   const total = subtotal + deliveryFee;
 
   const orderRequest = await orderRequestModel.create({

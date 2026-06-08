@@ -3,7 +3,7 @@ let cart = normalizeCart(
   JSON.parse(localStorage.getItem('carrinhoJulius')) ||
   []
 );
-let DELIVERY_FEE = 5;
+let DELIVERY_FEE = 0;
 let WHATSAPP_NUMBER = '5511999999999';
 
 function formatCurrency(value) {
@@ -33,9 +33,8 @@ async function initCartPage() {
 
   try {
     const response = await apiRequest('/reports/public-config');
-    DELIVERY_FEE = Number(response.data.deliveryFee || 5);
+    DELIVERY_FEE = Number(response.data.deliveryFee || 0);
     WHATSAPP_NUMBER = response.data.whatsappNumber || WHATSAPP_NUMBER;
-    updateDeliveryFeeLabel();
   } catch (error) {
     console.warn(error.message);
   }
@@ -81,13 +80,6 @@ function renderCart() {
   calculateTotals();
 }
 
-function updateDeliveryFeeLabel() {
-  const feeLabel = document.getElementById('delivery-fee');
-  if (feeLabel) {
-    feeLabel.innerText = formatCurrency(DELIVERY_FEE);
-  }
-}
-
 function changeQty(index, delta) {
   cart[index].quantity += delta;
   if (cart[index].quantity <= 0) {
@@ -116,10 +108,10 @@ function saveAndRefresh() {
 
 function calculateTotals() {
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  updatePriceDisplay(subtotal, DELIVERY_FEE);
+  updatePriceDisplay(subtotal);
 }
 
-function updatePriceDisplay(subtotal, fee = 0) {
+function updatePriceDisplay(subtotal) {
   const subtotalEl = document.getElementById('subtotal');
   const totalEl = document.getElementById('total-geral');
 
@@ -128,7 +120,7 @@ function updatePriceDisplay(subtotal, fee = 0) {
   }
 
   if (totalEl) {
-    totalEl.innerText = formatCurrency(subtotal + (subtotal > 0 ? fee : 0));
+    totalEl.innerText = formatCurrency(subtotal);
   }
 }
 
@@ -155,7 +147,6 @@ async function finalizarPedido() {
       method: 'POST',
       body: JSON.stringify({
         notes: observation,
-        deliveryFee: DELIVERY_FEE,
         items: cart.map((item) => ({
           productId: item.id,
           quantity: item.quantity
@@ -171,7 +162,7 @@ async function finalizarPedido() {
     renderCart();
     updateBadge();
 
-    alert('Pedido enviado para aprovacao do Julius. Voce recebera a resposta por SMS.');
+    alert('Pedido enviado para aprovacao do Julius. Voce recebera a resposta pelo WhatsApp.');
   } catch (error) {
     alert(error.message);
   }

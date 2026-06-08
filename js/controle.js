@@ -16,6 +16,10 @@ function switchTab(evt, tabId) {
 }
 
 function openModal(id) {
+  if (id === 'modalProduto') {
+    renderProductSupplyFields();
+  }
+
   document.getElementById(id).style.display = 'flex';
 }
 
@@ -26,7 +30,18 @@ function closeModal(id) {
     document.getElementById('form-produto').reset();
     document.getElementById('prod-id').value = '';
     document.getElementById('modal-prod-title').innerText = 'Produto';
+    renderProductSupplyFields();
   }
+
+  if (id === 'modalInsumo') {
+    document.querySelector('#modalInsumo form').reset();
+    document.getElementById('ins-available').checked = true;
+    toggleInsumoTipo();
+  }
+}
+
+function getSupplyName(id) {
+  return INSUMOS.find((insumo) => Number(insumo.id) === Number(id))?.name || 'Insumo';
 }
 
 function renderProdutos() {
@@ -35,20 +50,27 @@ function renderProdutos() {
     return;
   }
 
-  container.innerHTML = PRODUTOS.map((produto) => `
-    <div class="product-card-adm">
-      <div>
-        <h4>${produto.name}</h4>
-        <p>${produto.description}</p>
-        <span class="price">${formatCurrency(produto.price)}</span>
-        <p>Estoque: ${produto.stock_quantity ?? 0}</p>
+  container.innerHTML = PRODUTOS.map((produto) => {
+    const supplyNames = (produto.supplies || [])
+      .filter((supply) => supply.required)
+      .map((supply) => getSupplyName(supply.supply_id))
+      .join(', ');
+
+    return `
+      <div class="product-card-adm">
+        <div>
+          <h4>${produto.name}</h4>
+          <p>${produto.description}</p>
+          <span class="price">${formatCurrency(produto.price)}</span>
+          <p>Insumos: ${supplyNames || 'Nenhum insumo vinculado'}</p>
+        </div>
+        <div class="card-actions">
+          <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
+          <button onclick="excluirProduto(${produto.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
+        </div>
       </div>
-      <div class="card-actions">
-        <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
-        <button onclick="excluirProduto(${produto.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function renderInsumos() {
@@ -57,18 +79,66 @@ function renderInsumos() {
     return;
   }
 
-  container.innerHTML = INSUMOS.map((insumo) => `
-    <div class="insumo-card-adm">
-      <div>
-        <h4>${insumo.name}</h4>
-        <p>Quantidade em estoque disponivel para uso.</p>
-        <span class="stock-badge">${insumo.quantity} ${insumo.unit}</span>
+  container.innerHTML = INSUMOS.map((insumo) => {
+    const isBoolean = Boolean(insumo.is_boolean);
+    const status = isBoolean
+      ? (insumo.available ? 'Disponivel' : 'Indisponivel')
+      : `${Number(insumo.quantity)} ${insumo.unit}`;
+
+    return `
+      <div class="insumo-card-adm">
+        <div>
+          <h4>${insumo.name}</h4>
+          <p>${isBoolean ? 'Controle por disponibilidade.' : 'Quantidade em estoque disponivel para uso.'}</p>
+          <span class="stock-badge">${status}</span>
+          ${isBoolean ? `
+            <label class="checkbox-row compact">
+              <input type="checkbox" ${insumo.available ? 'checked' : ''} onchange="salvarInsumo(${insumo.id}, { available: this.checked })">
+              Disponivel
+            </label>
+          ` : `
+            <div class="inline-stock-edit">
+              <input type="number" id="ins-qtd-${insumo.id}" value="${Number(insumo.quantity)}" step="0.1" min="0">
+              <button onclick="salvarInsumo(${insumo.id}, { quantity: Number(document.getElementById('ins-qtd-${insumo.id}').value) })">Salvar</button>
+            </div>
+          `}
+        </div>
+        <div class="card-actions">
+          <button onclick="excluirInsumo(${insumo.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
+        </div>
       </div>
-      <div class="card-actions">
-        <button onclick="excluirInsumo(${insumo.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
+    `;
+  }).join('');
+}
+
+function renderProductSupplyFields(selectedSupplies = []) {
+  const container = document.getElementById('prod-insumos');
+  if (!container) {
+    return;
+  }
+
+  const selectedBySupplyId = selectedSupplies.reduce((acc, supply) => {
+    acc[Number(supply.supply_id)] = supply;
+    return acc;
+  }, {});
+
+  container.innerHTML = INSUMOS.map((insumo) => {
+    const selected = selectedBySupplyId[Number(insumo.id)];
+    const checked = selected?.required ? 'checked' : '';
+    const quantity = selected?.quantity_required ?? (insumo.is_boolean ? 0 : 1);
+
+    return `
+      <div class="ingredient-row">
+        <label>
+          <input type="checkbox" class="prod-supply-check" data-supply-id="${insumo.id}" ${checked}>
+          ${insumo.name}
+        </label>
+        ${insumo.is_boolean ? '<span>checkbox</span>' : `
+          <input type="number" class="prod-supply-qty" data-supply-id="${insumo.id}" value="${quantity}" min="0" step="0.1">
+        `}
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 async function carregarProdutos() {
@@ -81,13 +151,33 @@ async function carregarInsumos() {
   const response = await apiRequest('/supplies');
   INSUMOS = response.data || [];
   renderInsumos();
+  renderProductSupplyFields();
 }
 
 async function carregarRelatorios() {
-  const response = await apiRequest('/reports/dashboard');
+  const month = document.getElementById('report-month')?.value;
+  const year = document.getElementById('report-year')?.value;
+  const query = month && year ? `?month=${month}&year=${year}` : '';
+  const response = await apiRequest(`/reports/dashboard${query}`);
   const report = response.data;
   document.getElementById('fat-hoje').innerText = formatCurrency(report.revenue);
   document.getElementById('total-pedidos').innerText = report.totalOrders;
+}
+
+function getSelectedProductSupplies() {
+  return [...document.querySelectorAll('.prod-supply-check')]
+    .filter((input) => input.checked)
+    .map((input) => {
+      const supplyId = Number(input.dataset.supplyId);
+      const supply = INSUMOS.find((item) => Number(item.id) === supplyId);
+      const quantityInput = document.querySelector(`.prod-supply-qty[data-supply-id="${supplyId}"]`);
+
+      return {
+        supplyId,
+        quantityRequired: supply?.is_boolean ? 0 : Number(quantityInput?.value || 0),
+        required: true
+      };
+    });
 }
 
 async function salvarProduto(event) {
@@ -98,9 +188,9 @@ async function salvarProduto(event) {
     name: document.getElementById('prod-nome').value,
     description: document.getElementById('prod-desc').value,
     price: Number(document.getElementById('prod-preco').value),
-    stockQuantity: Number(document.getElementById('prod-estoque').value),
     imageUrl: './img/cachorroQuenteTrad.png',
-    active: true
+    active: true,
+    supplies: getSelectedProductSupplies()
   };
 
   try {
@@ -134,8 +224,8 @@ function editarProduto(id) {
   document.getElementById('prod-nome').value = produto.name;
   document.getElementById('prod-desc').value = produto.description;
   document.getElementById('prod-preco').value = produto.price;
-  document.getElementById('prod-estoque').value = produto.stock_quantity ?? 0;
   document.getElementById('modal-prod-title').innerText = 'Editar Produto';
+  renderProductSupplyFields(produto.supplies || []);
   openModal('modalProduto');
 }
 
@@ -153,13 +243,23 @@ async function excluirProduto(id) {
   }
 }
 
+function toggleInsumoTipo() {
+  const isBoolean = document.getElementById('ins-boolean').checked;
+  document.getElementById('ins-qtd').disabled = isBoolean;
+  document.getElementById('ins-unid').disabled = isBoolean;
+  document.getElementById('ins-qtd').required = !isBoolean;
+}
+
 async function adicionarInsumo(event) {
   event.preventDefault();
 
+  const isBoolean = document.getElementById('ins-boolean').checked;
   const payload = {
     name: document.getElementById('ins-nome').value,
-    quantity: Number(document.getElementById('ins-qtd').value),
-    unit: document.getElementById('ins-unid').value
+    quantity: isBoolean ? 0 : Number(document.getElementById('ins-qtd').value),
+    unit: document.getElementById('ins-unid').value,
+    isBoolean,
+    available: document.getElementById('ins-available').checked
   };
 
   try {
@@ -169,8 +269,32 @@ async function adicionarInsumo(event) {
     });
 
     await carregarInsumos();
-    document.querySelector('#modalInsumo form').reset();
     closeModal('modalInsumo');
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function salvarInsumo(id, changes) {
+  const insumo = INSUMOS.find((item) => item.id === id);
+  if (!insumo) {
+    return;
+  }
+
+  const payload = {
+    name: insumo.name,
+    quantity: changes.quantity ?? insumo.quantity,
+    unit: insumo.unit,
+    isBoolean: insumo.is_boolean,
+    available: changes.available ?? insumo.available
+  };
+
+  try {
+    await apiRequest(`/supplies/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload)
+    });
+    await carregarInsumos();
   } catch (error) {
     alert(error.message);
   }
@@ -184,9 +308,32 @@ async function excluirInsumo(id) {
   try {
     await apiRequest(`/supplies/${id}`, { method: 'DELETE' });
     await carregarInsumos();
+    await carregarProdutos();
   } catch (error) {
     alert(error.message);
   }
+}
+
+function setupReportFilters() {
+  const monthSelect = document.getElementById('report-month');
+  const yearSelect = document.getElementById('report-year');
+  if (!monthSelect || !yearSelect) {
+    return;
+  }
+
+  const monthNames = [
+    'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+  const now = new Date();
+  monthSelect.innerHTML = monthNames.map((name, index) => `
+    <option value="${index + 1}" ${index === now.getMonth() ? 'selected' : ''}>${name}</option>
+  `).join('');
+
+  const currentYear = now.getFullYear();
+  yearSelect.innerHTML = [currentYear - 1, currentYear, currentYear + 1].map((year) => `
+    <option value="${year}" ${year === currentYear ? 'selected' : ''}>${year}</option>
+  `).join('');
 }
 
 function setupMenu() {
@@ -203,6 +350,8 @@ function setupMenu() {
 
 async function init() {
   setupMenu();
+  setupReportFilters();
+  toggleInsumoTipo();
 
   try {
     const session = await apiRequest('/auth/me');
@@ -212,9 +361,9 @@ async function init() {
       return;
     }
 
+    await carregarInsumos();
     await Promise.all([
       carregarProdutos(),
-      carregarInsumos(),
       carregarRelatorios()
     ]);
   } catch (error) {

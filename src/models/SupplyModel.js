@@ -26,6 +26,33 @@ class SupplyModel extends BaseModel {
 
     return rows[0] || null;
   }
+
+  async findByIds(ids) {
+    if (!ids.length) {
+      return [];
+    }
+
+    return supabase.request(this.tableName, {
+      query: {
+        select: '*',
+        id: `in.(${ids.join(',')})`
+      }
+    });
+  }
+
+  async updateQuantity(id, quantity) {
+    const rows = await supabase.request(this.tableName, {
+      method: 'PATCH',
+      query: {
+        id: `eq.${id}`
+      },
+      body: {
+        quantity
+      }
+    });
+
+    return rows[0] || null;
+  }
 }
 
 module.exports = new SupplyModel();

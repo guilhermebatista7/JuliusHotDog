@@ -13,7 +13,15 @@ function mapProductPayload(body) {
     price: Number(body.price),
     imageUrl: body.imageUrl || './img/cachorroQuenteTrad.png',
     active: normalizedActive,
-    stockQuantity: Number(body.stockQuantity ?? body.stock_quantity ?? 0)
+    supplies: Array.isArray(body.supplies)
+      ? body.supplies.map((supply) => ({
+        supplyId: Number(supply.supplyId ?? supply.supply_id),
+        quantityRequired: Number(supply.quantityRequired ?? supply.quantity_required ?? 0),
+        required: supply.required === undefined
+          ? true
+          : supply.required === true || supply.required === 'true' || supply.required === 1 || supply.required === '1'
+      })).filter((supply) => supply.supplyId && !Number.isNaN(supply.quantityRequired))
+      : []
   };
 }
 

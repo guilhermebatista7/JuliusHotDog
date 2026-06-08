@@ -111,8 +111,14 @@ class OrderModel extends BaseModel {
     return this.deleteById(id);
   }
 
-  async getSummary() {
-    const orders = await this.findAll('id DESC');
+  async getSummary(filters = {}) {
+    const orders = (await this.findAll('id DESC')).filter((order) => {
+      const createdAt = new Date(order.created_at).getTime();
+      const startsAt = filters.startDate ? new Date(filters.startDate).getTime() : null;
+      const endsAt = filters.endDate ? new Date(filters.endDate).getTime() : null;
+
+      return (!startsAt || createdAt >= startsAt) && (!endsAt || createdAt < endsAt);
+    });
 
     return {
       totalOrders: orders.length,

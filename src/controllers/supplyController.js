@@ -3,10 +3,16 @@ const HttpError = require('../utils/httpError');
 const { success } = require('../utils/apiResponse');
 
 function mapSupplyPayload(body) {
+  const isBoolean = body.isBoolean === true || body.isBoolean === 'true' || body.is_boolean === true || body.is_boolean === 'true';
+
   return {
     name: body.name,
-    quantity: Number(body.quantity),
-    unit: body.unit
+    quantity: isBoolean ? 0 : Number(body.quantity),
+    unit: body.unit || 'UN',
+    is_boolean: isBoolean,
+    available: body.available === undefined
+      ? true
+      : body.available === true || body.available === 'true' || body.available === 1 || body.available === '1'
   };
 }
 
