@@ -75,8 +75,12 @@
                 <div class="header-flex">
                     <h2>Performance Financeira</h2>
                     <div class="report-filters">
-                        <input type="date" id="report-start">
-                        <input type="date" id="report-end">
+                        <select id="report-month"></select>
+                        <input type="number" id="report-year" min="2020" step="1">
+                        <label class="checkbox-row compact">
+                            <input type="checkbox" id="report-full-year">
+                            Ano todo
+                        </label>
                         <button type="button" onclick="carregarRelatorios()">Buscar</button>
                     </div>
                 </div>

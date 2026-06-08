@@ -1,9 +1,7 @@
 ALTER TABLE products ADD COLUMN IF NOT EXISTS category VARCHAR(20) NOT NULL DEFAULT 'snack';
-ALTER TABLE products ADD COLUMN IF NOT EXISTS beverage_type VARCHAR(20) NULL;
 
 UPDATE products
 SET category = 'snack',
-    beverage_type = NULL,
     image_url = CASE
       WHEN LOWER(name) LIKE '%frango%' THEN './img/hotdog-frango.png'
       WHEN LOWER(name) LIKE '%bacon%' THEN './img/hotdog-bacon.png'
@@ -16,16 +14,10 @@ WHERE LOWER(name) IN ('tradicional', 'frango', 'pizza', 'chefe', 'bacon')
 
 UPDATE products
 SET category = 'drink',
-    beverage_type = 'can',
-    image_url = './img/bebida-copo.svg'
+    image_url = './img/hot-dog.png'
 WHERE LOWER(name) LIKE '%350ml%'
-   OR LOWER(description) LIKE '%lata%';
-
-UPDATE products
-SET category = 'drink',
-    beverage_type = 'bottle',
-    image_url = './img/bebida-garrafa.svg'
-WHERE LOWER(description) LIKE '%garrafa%'
+   OR LOWER(description) LIKE '%lata%'
+   OR LOWER(description) LIKE '%garrafa%'
    OR LOWER(name) LIKE '%agua%'
    OR LOWER(name) LIKE '%água%';
 

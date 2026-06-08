@@ -63,7 +63,7 @@ function normalizarImagem(produto) {
   }
 
   if (category === 'drink') {
-    return produto.beverage_type === 'bottle' ? '../img/bebida-garrafa.svg' : '../img/bebida-copo.svg';
+    return '../img/hot-dog.png';
   }
 
   if (name.includes('frango')) return '../img/hotdog-frango.png';
@@ -99,7 +99,10 @@ function renderizarCardapio(categoria = 'todos') {
   menuGrid.innerHTML = produtosFiltrados.map((produto) => `
     <article class="menu-card">
       <div class="menu-card-image">
-        <img src="${normalizarImagem(produto)}" alt="${produto.name}">
+        ${obterCategoria(produto) === 'drink'
+          ? `<i class="fas ${getBeverageIcon(produto)}"></i>`
+          : `<img src="${normalizarImagem(produto)}" alt="${produto.name}">`
+        }
       </div>
       <div class="menu-card-body">
         <span class="menu-card-category">${categoriaTexto(produto)}</span>
@@ -114,6 +117,11 @@ function renderizarCardapio(categoria = 'todos') {
       </div>
     </article>
   `).join('');
+}
+
+function getBeverageIcon(produto) {
+  const text = `${produto.name || ''} ${produto.description || ''}`.toLowerCase();
+  return text.includes('garrafa') || text.includes('agua') || text.includes('água') ? 'fa-bottle-water' : 'fa-glass-water';
 }
 
 function adicionarAoCarrinho(id) {

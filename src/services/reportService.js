@@ -1,39 +1,29 @@
-const orderModel = require('../models/OrderModel');
+const orderRequestModel = require('../models/OrderRequestModel');
 const productModel = require('../models/ProductModel');
 const supplyModel = require('../models/SupplyModel');
 const userModel = require('../models/UserModel');
 
-function buildDateFilter({ month, year, startDate, endDate } = {}) {
-  if (startDate || endDate) {
-    const startsAt = startDate ? new Date(`${startDate}T00:00:00.000Z`) : null;
-    const endsAt = endDate ? new Date(`${endDate}T00:00:00.000Z`) : null;
-
-    return {
-      startDate: startsAt ? startsAt.toISOString() : null,
-      endDate: endsAt ? new Date(endsAt.getTime() + 24 * 60 * 60 * 1000).toISOString() : null,
-      selectedStartDate: startDate || null,
-      selectedEndDate: endDate || null
-    };
-  }
-
+function buildDateFilter({ month, year, fullYear } = {}) {
   const now = new Date();
   const selectedYear = Number(year || now.getFullYear());
   const selectedMonth = Number(month || now.getMonth() + 1);
-  const monthStartDate = new Date(Date.UTC(selectedYear, selectedMonth - 1, 1)).toISOString();
-  const monthEndDate = new Date(Date.UTC(selectedYear, selectedMonth, 1)).toISOString();
+  const useFullYear = fullYear === true || fullYear === 'true' || fullYear === '1';
+  const startMonthIndex = useFullYear ? 0 : selectedMonth - 1;
+  const endMonthIndex = useFullYear ? 12 : selectedMonth;
 
   return {
     month: selectedMonth,
     year: selectedYear,
-    startDate: monthStartDate,
-    endDate: monthEndDate
+    fullYear: useFullYear,
+    startDate: new Date(Date.UTC(selectedYear, startMonthIndex, 1)).toISOString(),
+    endDate: new Date(Date.UTC(selectedYear, endMonthIndex, 1)).toISOString()
   };
 }
 
 async function getDashboardSummary(filters = {}) {
   const dateFilter = buildDateFilter(filters);
   const [orderSummary, products, supplies, users] = await Promise.all([
-    orderModel.getSummary(dateFilter),
+    orderRequestModel.getAcceptedSummary(dateFilter),
     productModel.findAll('id DESC'),
     supplyModel.findAll('id DESC'),
     userModel.findAllSafe()
@@ -47,8 +37,7 @@ async function getDashboardSummary(filters = {}) {
     totalUsers: users.length,
     month: dateFilter.month,
     year: dateFilter.year,
-    startDate: dateFilter.selectedStartDate || null,
-    endDate: dateFilter.selectedEndDate || null
+    fullYear: dateFilter.fullYear
   };
 }
 

@@ -58,7 +58,7 @@ function getProductImage(product) {
   }
 
   if (getProductCategory(product) === 'drink') {
-    return product.beverage_type === 'bottle' ? './img/bebida-garrafa.svg' : './img/bebida-copo.svg';
+    return './img/hot-dog.png';
   }
 
   if (name.includes('frango')) return './img/hotdog-frango.png';
@@ -93,7 +93,7 @@ function renderProductList(containerId, products) {
           <h4>${produto.name}</h4>
           <p>${produto.description}</p>
           <span class="price">${formatCurrency(produto.price)}</span>
-          <p>${isDrink ? `Tipo: ${produto.beverage_type === 'bottle' ? 'Garrafa' : 'Lata'}` : `Insumos: ${supplyNames || 'Nenhum insumo vinculado'}`}</p>
+          <p>${isDrink ? `Tipo: ${getBeverageType(produto) === 'bottle' ? 'Garrafa' : 'Lata'}` : `Insumos: ${supplyNames || 'Nenhum insumo vinculado'}`}</p>
         </div>
         <div class="card-actions">
           <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
@@ -204,16 +204,21 @@ async function carregarInsumos() {
 }
 
 async function carregarRelatorios() {
-  const startDate = document.getElementById('report-start')?.value;
-  const endDate = document.getElementById('report-end')?.value;
+  const month = document.getElementById('report-month')?.value;
+  const year = document.getElementById('report-year')?.value;
+  const fullYear = document.getElementById('report-full-year')?.checked;
   const params = new URLSearchParams();
 
-  if (startDate) {
-    params.set('startDate', startDate);
+  if (month) {
+    params.set('month', month);
   }
 
-  if (endDate) {
-    params.set('endDate', endDate);
+  if (year) {
+    params.set('year', year);
+  }
+
+  if (fullYear) {
+    params.set('fullYear', 'true');
   }
 
   const query = params.toString() ? `?${params.toString()}` : '';
@@ -249,17 +254,19 @@ async function salvarProduto(event) {
   const id = document.getElementById('prod-id').value;
   const category = document.getElementById('prod-category').value;
   const beverageType = document.getElementById('prod-beverage-type').value;
+  const rawDescription = document.getElementById('prod-desc').value;
+  const drinkSuffix = beverageType === 'bottle' ? 'Garrafa.' : 'Lata.';
   const payload = {
     name: document.getElementById('prod-nome').value,
-    description: document.getElementById('prod-desc').value,
+    description: category === 'drink' && !rawDescription.toLowerCase().includes(drinkSuffix.toLowerCase())
+      ? `${rawDescription} ${drinkSuffix}`
+      : rawDescription,
     price: Number(document.getElementById('prod-preco').value),
     imageUrl: getProductImage({
       name: document.getElementById('prod-nome').value,
-      category,
-      beverage_type: beverageType
+      category
     }),
     category,
-    beverageType,
     active: true,
     supplies: getSelectedProductSupplies()
   };
@@ -296,11 +303,16 @@ function editarProduto(id) {
   document.getElementById('prod-desc').value = produto.description;
   document.getElementById('prod-preco').value = produto.price;
   document.getElementById('prod-category').value = getProductCategory(produto);
-  document.getElementById('prod-beverage-type').value = produto.beverage_type || 'can';
+  document.getElementById('prod-beverage-type').value = getBeverageType(produto);
   document.getElementById('modal-prod-title').innerText = 'Editar Produto';
   renderProductSupplyFields(produto.supplies || []);
   toggleProductCategory();
   openModal('modalProduto');
+}
+
+function getBeverageType(product) {
+  const text = `${product.name || ''} ${product.description || ''}`.toLowerCase();
+  return text.includes('garrafa') || text.includes('agua') || text.includes('água') ? 'bottle' : 'can';
 }
 
 function toggleProductCategory() {
@@ -403,17 +415,21 @@ async function excluirInsumo(id) {
 }
 
 function setupReportFilters() {
-  const startInput = document.getElementById('report-start');
-  const endInput = document.getElementById('report-end');
-  if (!startInput || !endInput) {
+  const monthSelect = document.getElementById('report-month');
+  const yearInput = document.getElementById('report-year');
+  if (!monthSelect || !yearInput) {
     return;
   }
 
+  const monthNames = [
+    'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
   const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth(), 1);
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  startInput.value = start.toISOString().slice(0, 10);
-  endInput.value = end.toISOString().slice(0, 10);
+  monthSelect.innerHTML = monthNames.map((name, index) => `
+    <option value="${index + 1}" ${index === now.getMonth() ? 'selected' : ''}>${name}</option>
+  `).join('');
+  yearInput.value = now.getFullYear();
 }
 
 function setupMenu() {

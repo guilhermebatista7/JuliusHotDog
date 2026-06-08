@@ -82,6 +82,7 @@
     gap: 10px;
 }
 
+.report-filters select,
 .report-filters input,
 .report-filters button {
     background: #000;

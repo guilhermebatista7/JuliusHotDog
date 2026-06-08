@@ -6,8 +6,7 @@ async function getDashboard(req, res) {
   const report = await getDashboardSummary({
     month: req.query.month,
     year: req.query.year,
-    startDate: req.query.startDate,
-    endDate: req.query.endDate
+    fullYear: req.query.fullYear
   });
   return success(res, report, 'Relatorio carregado com sucesso.');
 }

@@ -8,7 +8,7 @@ class ProductModel extends BaseModel {
   }
 
   async create(payload) {
-    const { name, description, price, imageUrl, active, category, beverageType, supplies = [] } = payload;
+    const { name, description, price, imageUrl, active, category, supplies = [] } = payload;
     const rows = await supabase.request(this.tableName, {
       method: 'POST',
       body: {
@@ -17,7 +17,6 @@ class ProductModel extends BaseModel {
         price,
         image_url: imageUrl,
         category,
-        beverage_type: beverageType,
         active
       }
     });
@@ -32,7 +31,7 @@ class ProductModel extends BaseModel {
   }
 
   async update(id, payload) {
-    const { name, description, price, imageUrl, active, category, beverageType, supplies = [] } = payload;
+    const { name, description, price, imageUrl, active, category, supplies = [] } = payload;
     const rows = await supabase.request(this.tableName, {
       method: 'PATCH',
       query: {
@@ -44,7 +43,6 @@ class ProductModel extends BaseModel {
         price,
         image_url: imageUrl,
         category,
-        beverage_type: beverageType,
         active
       }
     });
