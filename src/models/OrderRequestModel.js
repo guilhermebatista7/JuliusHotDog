@@ -56,7 +56,17 @@ class OrderRequestModel extends BaseModel {
 
     return {
       totalOrders: requests.length,
-      totalRevenue: requests.reduce((total, request) => total + Number(request.total || 0), 0)
+      totalRevenue: requests.reduce((total, request) => total + Number(request.total || 0), 0),
+      orders: requests.map((request) => ({
+        id: request.id,
+        customerName: request.customer_name,
+        customerEmail: request.customer_email,
+        customerPhone: request.customer_phone,
+        notes: request.notes,
+        total: Number(request.total || 0),
+        createdAt: request.created_at,
+        items: request.items || []
+      }))
     };
   }
 }

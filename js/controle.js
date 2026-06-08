@@ -8,6 +8,17 @@ function formatCurrency(value) {
   });
 }
 
+function formatDateTime(value) {
+  if (!value) {
+    return '-';
+  }
+
+  return new Date(value).toLocaleString('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
+}
+
 function switchTab(evt, tabId) {
   document.querySelectorAll('.tab-content').forEach((content) => content.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach((button) => button.classList.remove('active'));
@@ -226,6 +237,51 @@ async function carregarRelatorios() {
   const report = response.data;
   document.getElementById('fat-hoje').innerText = formatCurrency(report.revenue);
   document.getElementById('total-pedidos').innerText = report.totalOrders;
+  renderReportOrders(report.orders || []);
+}
+
+function formatOrderItems(items = []) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return 'Itens nao informados.';
+  }
+
+  return items.map((item) => {
+    const quantity = item.quantity || item.quantidade || 1;
+    const name = item.productName || item.product_name || item.name || item.nome || 'Produto';
+    return `${quantity}x ${name}`;
+  }).join(', ');
+}
+
+function renderReportOrders(orders) {
+  const container = document.getElementById('report-orders-list');
+  if (!container) {
+    return;
+  }
+
+  if (!orders.length) {
+    container.innerHTML = '<p class="empty-admin-msg">Nenhum pedido aceito encontrado para este filtro.</p>';
+    return;
+  }
+
+  container.innerHTML = orders.map((order) => `
+    <article class="report-order-card">
+      <label class="report-order-check">
+        <input type="checkbox">
+        Feito
+      </label>
+      <div class="report-order-main">
+        <div class="report-order-header">
+          <h4>Pedido #${order.id}</h4>
+          <strong>${formatCurrency(order.total)}</strong>
+        </div>
+        <p><strong>Cliente:</strong> ${order.customerName || 'Nao informado'}</p>
+        <p><strong>Contato:</strong> ${order.customerPhone || order.customerEmail || 'Nao informado'}</p>
+        <p><strong>Data:</strong> ${formatDateTime(order.createdAt)}</p>
+        <p><strong>Itens:</strong> ${formatOrderItems(order.items)}</p>
+        <p><strong>Observacoes:</strong> ${order.notes || 'Nenhuma'}</p>
+      </div>
+    </article>
+  `).join('');
 }
 
 function getSelectedProductSupplies() {

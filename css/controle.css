@@ -253,6 +253,57 @@
 .money { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
 .orders { background: rgba(52, 152, 219, 0.1); color: #3498db; }
 
+.orders-report-section {
+    margin-top: 28px;
+}
+
+.report-orders-list {
+    display: grid;
+    gap: 14px;
+}
+
+.report-order-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.report-order-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ddd;
+    font-weight: bold;
+}
+
+.report-order-check input {
+    width: 18px;
+    height: 18px;
+}
+
+.report-order-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.report-order-header h4 {
+    margin: 0;
+}
+
+.report-order-main p {
+    color: #aaa;
+    margin: 7px 0;
+    font-size: 0.92rem;
+}
+
 /* Modais */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
 .modal-content { background: #1a1a1a; padding: 30px; border-radius: 20px; width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 40px); overflow-y: auto; border: 1px solid #333; }
@@ -277,6 +328,8 @@
     .report-filters input, .report-filters button { width: 100%; }
     .ingredient-row { grid-template-columns: 1fr; }
     .ingredient-controls { justify-content: flex-start; }
+    .report-order-card { grid-template-columns: 1fr; }
+    .report-order-header { align-items: flex-start; flex-direction: column; }
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

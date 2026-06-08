@@ -35,6 +35,7 @@ async function getDashboardSummary(filters = {}) {
     totalProducts: products.length,
     totalSupplies: supplies.length,
     totalUsers: users.length,
+    orders: orderSummary.orders || [],
     month: dateFilter.month,
     year: dateFilter.year,
     fullYear: dateFilter.fullYear
