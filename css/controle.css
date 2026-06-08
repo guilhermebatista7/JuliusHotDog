@@ -71,6 +71,12 @@
 
 .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px; }
 
+.section-title {
+    margin: 28px 0 14px;
+    color: #fff;
+    font-size: 1.15rem;
+}
+
 .report-filters {
     display: flex;
     gap: 10px;
@@ -114,6 +120,23 @@
 .product-card-adm:hover, .insumo-card-adm:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
 .product-card-adm h4, .insumo-card-adm h4 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; }
 .product-card-adm p, .insumo-card-adm p { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+
+.admin-product-image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #050505;
+    margin-bottom: 14px;
+}
+
+.empty-admin-msg {
+    color: #777;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 18px;
+}
 
 .price, .stock-badge { 
     color: #2ecc71; 

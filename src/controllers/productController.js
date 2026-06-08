@@ -7,12 +7,20 @@ function mapProductPayload(body) {
     ? true
     : body.active === true || body.active === 'true' || body.active === 1 || body.active === '1';
 
+  const category = body.category === 'drink' || body.category === 'bebida' ? 'drink' : 'snack';
+  const beverageType = category === 'drink' && body.beverageType === 'bottle' ? 'bottle' : (category === 'drink' ? 'can' : null);
+  const defaultImage = category === 'drink'
+    ? (beverageType === 'bottle' ? './img/bebida-garrafa.svg' : './img/bebida-copo.svg')
+    : './img/hotdog-tradicional.png';
+
   return {
     name: body.name,
     description: body.description,
     price: Number(body.price),
-    imageUrl: body.imageUrl || './img/cachorroQuenteTrad.png',
+    imageUrl: body.imageUrl || defaultImage,
     active: normalizedActive,
+    category,
+    beverageType,
     supplies: Array.isArray(body.supplies)
       ? body.supplies.map((supply) => ({
         supplyId: Number(supply.supplyId ?? supply.supply_id),

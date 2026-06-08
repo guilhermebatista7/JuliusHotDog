@@ -77,13 +77,26 @@ function renderProducts() {
 
   grid.innerHTML = homeProducts.map((product) => `
     <div class="card">
-      <img src="${product.image_url}" alt="${product.name}">
+      <img src="${getProductImage(product)}" alt="${product.name}">
       <h3>${product.name}</h3>
       <p style="font-size: 0.85rem; color: #888; margin: 10px 0;">${product.description}</p>
       <div style="color: #fff; font-weight: bold; font-size: 1.4rem; margin-bottom: 15px;">${formatCurrency(product.price)}</div>
       <a class="btn-primary" href="pages/cardapio.html">VER CARDAPIO COMPLETO</a>
     </div>
   `).join('');
+}
+
+function getProductImage(product) {
+  const image = product.image_url || '';
+  const name = String(product.name || '').toLowerCase();
+
+  if (image && !image.includes('cachorroQuenteTrad.png')) {
+    return image;
+  }
+
+  if (name.includes('frango')) return './img/hotdog-frango.png';
+  if (name.includes('bacon')) return './img/hotdog-bacon.png';
+  return './img/hotdog-tradicional.png';
 }
 
 function addToCart(id, event) {
@@ -101,7 +114,7 @@ function addToCart(id, event) {
       id: product.id,
       name: product.name,
       price: Number(product.price),
-      imageUrl: product.image_url,
+      imageUrl: getProductImage(product),
       quantity: 1
     });
   }

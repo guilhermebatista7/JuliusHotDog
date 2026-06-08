@@ -55,7 +55,10 @@
                         <i class="fas fa-plus"></i> NOVO PRODUTO
                     </button>
                 </div>
-                <div id="render-produtos" class="products-grid"></div>
+                <h3 class="section-title">Lanches</h3>
+                <div id="render-lanches" class="products-grid"></div>
+                <h3 class="section-title">Bebidas</h3>
+                <div id="render-bebidas" class="products-grid"></div>
             </div>
 
             <div id="tab-insumos" class="tab-content">
@@ -114,6 +117,20 @@
                 <div class="input-group-admin">
                     <label>Preço (R$)</label>
                     <input type="number" id="prod-preco" step="0.01" required>
+                </div>
+                <div class="input-group-admin">
+                    <label>Secao</label>
+                    <select id="prod-category" onchange="toggleProductCategory()">
+                        <option value="snack">Lanche</option>
+                        <option value="drink">Bebida</option>
+                    </select>
+                </div>
+                <div class="input-group-admin" id="drink-type-group">
+                    <label>Tipo da bebida</label>
+                    <select id="prod-beverage-type">
+                        <option value="can">Lata</option>
+                        <option value="bottle">Garrafa</option>
+                    </select>
                 </div>
                 <div class="input-group-admin">
                     <label>Insumos usados neste produto</label>

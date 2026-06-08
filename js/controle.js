@@ -18,6 +18,7 @@ function switchTab(evt, tabId) {
 function openModal(id) {
   if (id === 'modalProduto') {
     renderProductSupplyFields();
+    toggleProductCategory();
   }
 
   document.getElementById(id).style.display = 'flex';
@@ -44,25 +45,55 @@ function getSupplyName(id) {
   return INSUMOS.find((insumo) => Number(insumo.id) === Number(id))?.name || 'Insumo';
 }
 
-function renderProdutos() {
-  const container = document.getElementById('render-produtos');
+function getProductCategory(product) {
+  return product.category || (String(product.name || '').toLowerCase().includes('350ml') || String(product.description || '').toLowerCase().includes('refrigerante') || String(product.description || '').toLowerCase().includes('agua') ? 'drink' : 'snack');
+}
+
+function getProductImage(product) {
+  const name = String(product.name || '').toLowerCase();
+  const existingImage = product.image_url || '';
+
+  if (existingImage && !existingImage.includes('cachorroQuenteTrad.png')) {
+    return existingImage;
+  }
+
+  if (getProductCategory(product) === 'drink') {
+    return product.beverage_type === 'bottle' ? './img/bebida-garrafa.svg' : './img/bebida-copo.svg';
+  }
+
+  if (name.includes('frango')) return './img/hotdog-frango.png';
+  if (name.includes('bacon')) return './img/hotdog-bacon.png';
+  if (name.includes('pizza')) return './img/hotdog-pizza.png';
+  if (name.includes('chefe')) return './img/hotdog-chefe.png';
+  return './img/hotdog-tradicional.png';
+}
+
+function renderProductList(containerId, products) {
+  const container = document.getElementById(containerId);
   if (!container) {
     return;
   }
 
-  container.innerHTML = PRODUTOS.map((produto) => {
+  if (products.length === 0) {
+    container.innerHTML = '<p class="empty-admin-msg">Nenhum item cadastrado nesta secao.</p>';
+    return;
+  }
+
+  container.innerHTML = products.map((produto) => {
     const supplyNames = (produto.supplies || [])
       .filter((supply) => supply.required)
       .map((supply) => getSupplyName(supply.supply_id))
       .join(', ');
+    const isDrink = getProductCategory(produto) === 'drink';
 
     return `
       <div class="product-card-adm">
         <div>
+          <img src="${getProductImage(produto)}" alt="${produto.name}" class="admin-product-image">
           <h4>${produto.name}</h4>
           <p>${produto.description}</p>
           <span class="price">${formatCurrency(produto.price)}</span>
-          <p>Insumos: ${supplyNames || 'Nenhum insumo vinculado'}</p>
+          <p>${isDrink ? `Tipo: ${produto.beverage_type === 'bottle' ? 'Garrafa' : 'Lata'}` : `Insumos: ${supplyNames || 'Nenhum insumo vinculado'}`}</p>
         </div>
         <div class="card-actions">
           <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
@@ -71,6 +102,11 @@ function renderProdutos() {
       </div>
     `;
   }).join('');
+}
+
+function renderProdutos() {
+  renderProductList('render-lanches', PRODUTOS.filter((produto) => getProductCategory(produto) !== 'drink'));
+  renderProductList('render-bebidas', PRODUTOS.filter((produto) => getProductCategory(produto) === 'drink'));
 }
 
 function renderInsumos() {
@@ -188,6 +224,10 @@ async function carregarRelatorios() {
 }
 
 function getSelectedProductSupplies() {
+  if (document.getElementById('prod-category').value === 'drink') {
+    return [];
+  }
+
   return [...document.querySelectorAll('.prod-supply-check')]
     .filter((input) => input.checked)
     .map((input) => {
@@ -207,11 +247,19 @@ async function salvarProduto(event) {
   event.preventDefault();
 
   const id = document.getElementById('prod-id').value;
+  const category = document.getElementById('prod-category').value;
+  const beverageType = document.getElementById('prod-beverage-type').value;
   const payload = {
     name: document.getElementById('prod-nome').value,
     description: document.getElementById('prod-desc').value,
     price: Number(document.getElementById('prod-preco').value),
-    imageUrl: './img/cachorroQuenteTrad.png',
+    imageUrl: getProductImage({
+      name: document.getElementById('prod-nome').value,
+      category,
+      beverage_type: beverageType
+    }),
+    category,
+    beverageType,
     active: true,
     supplies: getSelectedProductSupplies()
   };
@@ -247,9 +295,26 @@ function editarProduto(id) {
   document.getElementById('prod-nome').value = produto.name;
   document.getElementById('prod-desc').value = produto.description;
   document.getElementById('prod-preco').value = produto.price;
+  document.getElementById('prod-category').value = getProductCategory(produto);
+  document.getElementById('prod-beverage-type').value = produto.beverage_type || 'can';
   document.getElementById('modal-prod-title').innerText = 'Editar Produto';
   renderProductSupplyFields(produto.supplies || []);
+  toggleProductCategory();
   openModal('modalProduto');
+}
+
+function toggleProductCategory() {
+  const category = document.getElementById('prod-category')?.value || 'snack';
+  const drinkTypeGroup = document.getElementById('drink-type-group');
+  const ingredientsGroup = document.getElementById('prod-insumos')?.closest('.input-group-admin');
+
+  if (drinkTypeGroup) {
+    drinkTypeGroup.style.display = category === 'drink' ? 'flex' : 'none';
+  }
+
+  if (ingredientsGroup) {
+    ingredientsGroup.style.display = category === 'drink' ? 'none' : 'flex';
+  }
 }
 
 async function excluirProduto(id) {
