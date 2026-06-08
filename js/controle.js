@@ -126,6 +126,9 @@ function renderProductSupplyFields(selectedSupplies = []) {
     const selected = selectedBySupplyId[Number(insumo.id)];
     const checked = selected?.required ? 'checked' : '';
     const quantity = selected?.quantity_required ?? (insumo.is_boolean ? 0 : 1);
+    const unlinkButton = checked
+      ? `<button type="button" class="btn-unlink-supply" onclick="desvincularInsumoProduto(${insumo.id})">Desvincular</button>`
+      : '<span class="ingredient-state">Nao vinculado</span>';
 
     return `
       <div class="ingredient-row">
@@ -133,12 +136,22 @@ function renderProductSupplyFields(selectedSupplies = []) {
           <input type="checkbox" class="prod-supply-check" data-supply-id="${insumo.id}" ${checked}>
           ${insumo.name}
         </label>
-        ${insumo.is_boolean ? '<span>checkbox</span>' : `
-          <input type="number" class="prod-supply-qty" data-supply-id="${insumo.id}" value="${quantity}" min="0" step="0.1">
-        `}
+        <div class="ingredient-controls">
+          ${insumo.is_boolean ? '<span class="ingredient-state">checkbox</span>' : `
+            <input type="number" class="prod-supply-qty" data-supply-id="${insumo.id}" value="${quantity}" min="0" step="0.1">
+          `}
+          ${unlinkButton}
+        </div>
       </div>
     `;
   }).join('');
+}
+
+function desvincularInsumoProduto(supplyId) {
+  const checkbox = document.querySelector(`.prod-supply-check[data-supply-id="${supplyId}"]`);
+  if (checkbox) {
+    checkbox.checked = false;
+  }
 }
 
 async function carregarProdutos() {
@@ -155,9 +168,19 @@ async function carregarInsumos() {
 }
 
 async function carregarRelatorios() {
-  const month = document.getElementById('report-month')?.value;
-  const year = document.getElementById('report-year')?.value;
-  const query = month && year ? `?month=${month}&year=${year}` : '';
+  const startDate = document.getElementById('report-start')?.value;
+  const endDate = document.getElementById('report-end')?.value;
+  const params = new URLSearchParams();
+
+  if (startDate) {
+    params.set('startDate', startDate);
+  }
+
+  if (endDate) {
+    params.set('endDate', endDate);
+  }
+
+  const query = params.toString() ? `?${params.toString()}` : '';
   const response = await apiRequest(`/reports/dashboard${query}`);
   const report = response.data;
   document.getElementById('fat-hoje').innerText = formatCurrency(report.revenue);
@@ -315,25 +338,17 @@ async function excluirInsumo(id) {
 }
 
 function setupReportFilters() {
-  const monthSelect = document.getElementById('report-month');
-  const yearSelect = document.getElementById('report-year');
-  if (!monthSelect || !yearSelect) {
+  const startInput = document.getElementById('report-start');
+  const endInput = document.getElementById('report-end');
+  if (!startInput || !endInput) {
     return;
   }
 
-  const monthNames = [
-    'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ];
   const now = new Date();
-  monthSelect.innerHTML = monthNames.map((name, index) => `
-    <option value="${index + 1}" ${index === now.getMonth() ? 'selected' : ''}>${name}</option>
-  `).join('');
-
-  const currentYear = now.getFullYear();
-  yearSelect.innerHTML = [currentYear - 1, currentYear, currentYear + 1].map((year) => `
-    <option value="${year}" ${year === currentYear ? 'selected' : ''}>${year}</option>
-  `).join('');
+  const start = new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  startInput.value = start.toISOString().slice(0, 10);
+  endInput.value = end.toISOString().slice(0, 10);
 }
 
 function setupMenu() {

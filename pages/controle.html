@@ -72,8 +72,9 @@
                 <div class="header-flex">
                     <h2>Performance Financeira</h2>
                     <div class="report-filters">
-                        <select id="report-month" onchange="carregarRelatorios()"></select>
-                        <select id="report-year" onchange="carregarRelatorios()"></select>
+                        <input type="date" id="report-start">
+                        <input type="date" id="report-end">
+                        <button type="button" onclick="carregarRelatorios()">Buscar</button>
                     </div>
                 </div>
                 <div class="reports-grid">
