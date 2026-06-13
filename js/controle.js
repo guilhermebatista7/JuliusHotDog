@@ -28,7 +28,10 @@ function switchTab(evt, tabId) {
 
 function openModal(id) {
   if (id === 'modalProduto') {
-    renderProductSupplyFields();
+    const isEditing = Boolean(document.getElementById('prod-id').value);
+    if (!isEditing) {
+      renderProductSupplyFields();
+    }
     toggleProductCategory();
   }
 
