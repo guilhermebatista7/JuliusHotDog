@@ -95,10 +95,29 @@ async function deleteProduct(req, res) {
   return success(res, null, 'Produto removido com sucesso.');
 }
 
+async function updateProductAvailability(req, res) {
+  const existingProduct = await productModel.findById(req.params.id);
+  if (!existingProduct) {
+    throw new HttpError(404, 'Produto nao encontrado.');
+  }
+
+  if (typeof req.body.active !== 'boolean') {
+    throw new HttpError(400, 'A disponibilidade do produto e obrigatoria.');
+  }
+
+  const product = await productModel.updateActive(req.params.id, req.body.active);
+  return success(
+    res,
+    product,
+    req.body.active ? 'Produto disponibilizado no cardapio.' : 'Produto ocultado do cardapio.'
+  );
+}
+
 module.exports = {
   listProducts,
   getProductById,
   createProduct,
   updateProduct,
+  updateProductAvailability,
   deleteProduct
 };

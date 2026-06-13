@@ -102,9 +102,14 @@ function renderProductList(containerId, products) {
     const isDrink = getProductCategory(produto) === 'drink';
 
     return `
-      <div class="product-card-adm">
+      <div class="product-card-adm ${produto.active ? '' : 'is-unavailable'}">
         <div>
-          <h4>${produto.name}</h4>
+          <div class="product-card-heading">
+            <h4>${produto.name}</h4>
+            <span class="availability-badge ${produto.active ? 'available' : 'unavailable'}">
+              ${produto.active ? 'Disponivel' : 'Indisponivel'}
+            </span>
+          </div>
           <p>${produto.description}</p>
           <span class="price">${formatCurrency(produto.price)}</span>
           <p>${isDrink
@@ -112,6 +117,14 @@ function renderProductList(containerId, products) {
             : `Insumos: ${supplyNames || 'Nenhum insumo vinculado'}`}</p>
         </div>
         <div class="card-actions">
+          <button
+            class="product-action availability-action ${produto.active ? 'hide-product' : 'show-product'}"
+            onclick="alternarDisponibilidadeProduto(${produto.id}, ${!produto.active})"
+            title="${produto.active ? 'Deixar indisponivel' : 'Disponibilizar no cardapio'}"
+            aria-label="${produto.active ? 'Deixar indisponivel' : 'Disponibilizar no cardapio'}"
+          >
+            <i class="fas ${produto.active ? 'fa-eye-slash' : 'fa-eye'}"></i>
+          </button>
           <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
           <button onclick="excluirProduto(${produto.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
         </div>
@@ -123,6 +136,18 @@ function renderProductList(containerId, products) {
 function renderProdutos() {
   renderProductList('render-lanches', PRODUTOS.filter((produto) => getProductCategory(produto) !== 'drink'));
   renderProductList('render-bebidas', PRODUTOS.filter((produto) => getProductCategory(produto) === 'drink'));
+}
+
+async function alternarDisponibilidadeProduto(id, active) {
+  try {
+    await apiRequest(`/products/${id}/availability`, {
+      method: 'PATCH',
+      body: JSON.stringify({ active })
+    });
+    await carregarProdutos();
+  } catch (error) {
+    alert(error.message);
+  }
 }
 
 function renderInsumos() {
@@ -381,7 +406,7 @@ async function salvarProduto(event) {
     category,
     beverageType,
     stockQuantity: category === 'drink' ? stockQuantity : undefined,
-    active: true,
+    active: existingProduct?.active ?? true,
     supplies: getSelectedProductSupplies()
   };
 

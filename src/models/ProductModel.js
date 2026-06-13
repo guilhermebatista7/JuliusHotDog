@@ -119,6 +119,20 @@ class ProductModel extends BaseModel {
 
     return rows[0] || null;
   }
+
+  async updateActive(id, active) {
+    const rows = await supabase.request(this.tableName, {
+      method: 'PATCH',
+      query: {
+        id: `eq.${id}`
+      },
+      body: {
+        active
+      }
+    });
+
+    return rows[0] || null;
+  }
 }
 
 module.exports = new ProductModel();

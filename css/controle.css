@@ -100,6 +100,37 @@
 .product-card-adm h4, .insumo-card-adm h4 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; }
 .product-card-adm p, .insumo-card-adm p { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
 
+.product-card-adm.is-unavailable {
+    border-color: #41282a;
+    opacity: 0.72;
+}
+
+.product-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.availability-badge {
+    flex: 0 0 auto;
+    padding: 5px 8px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.availability-badge.available {
+    background: rgba(46, 204, 113, 0.12);
+    color: #2ecc71;
+}
+
+.availability-badge.unavailable {
+    background: rgba(231, 76, 60, 0.12);
+    color: #e74c3c;
+}
+
 .empty-admin-msg {
     color: #777;
     background: #111;
@@ -120,6 +151,16 @@
     margin-top: 15px; padding-top: 15px; border-top: 1px solid #222;
     display: flex; justify-content: flex-end; gap: 15px;
 }
+
+.product-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.availability-action.hide-product { color: #f39c12; }
+.availability-action.show-product { color: #2ecc71; }
 
 .ingredient-list {
     max-height: 240px;
