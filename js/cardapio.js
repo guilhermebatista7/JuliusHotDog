@@ -5,7 +5,7 @@ const produtosFallback = [
     category: 'snack',
     description: 'Duas salsichas, batata palha, milho, maionese, ketchup e mostarda.',
     price: 14.00,
-    image_url: '../img/hotdog-tradicional.png'
+    image_url: '../img/hotdog-tradicional.webp'
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const produtosFallback = [
     category: 'snack',
     description: 'Duas salsichas, frango desfiado, batata palha, milho, maionese, ketchup e mostarda.',
     price: 18.00,
-    image_url: '../img/hotdog-frango.png'
+    image_url: '../img/hotdog-frango.webp'
   },
   {
     id: 5,
@@ -21,7 +21,7 @@ const produtosFallback = [
     category: 'snack',
     description: 'Duas salsichas, bacon, batata palha, milho, maionese, ketchup e mostarda.',
     price: 20.00,
-    image_url: '../img/hotdog-bacon.png'
+    image_url: '../img/hotdog-bacon.webp'
   }
 ];
 
@@ -66,11 +66,11 @@ function normalizarImagem(produto) {
     return '../img/hot-dog.png';
   }
 
-  if (name.includes('frango')) return '../img/hotdog-frango.png';
-  if (name.includes('bacon')) return '../img/hotdog-bacon.png';
-  if (name.includes('pizza')) return '../img/hotdog-pizza.png';
-  if (name.includes('chefe')) return '../img/hotdog-chefe.png';
-  return '../img/hotdog-tradicional.png';
+  if (name.includes('frango')) return '../img/hotdog-frango.webp';
+  if (name.includes('bacon')) return '../img/hotdog-bacon.webp';
+  if (name.includes('pizza')) return '../img/hotdog-pizza.webp';
+  if (name.includes('chefe')) return '../img/hotdog-chefe.webp';
+  return '../img/hotdog-tradicional.webp';
 }
 
 function obterCategoria(produto) {
@@ -99,10 +99,13 @@ function renderizarCardapio(categoria = 'todos') {
   menuGrid.innerHTML = produtosFiltrados.map((produto) => `
     <article class="menu-card">
       <div class="menu-card-image">
-        ${obterCategoria(produto) === 'drink'
-          ? `<i class="fas ${getBeverageIcon(produto)}"></i>`
-          : `<img src="${normalizarImagem(produto)}" alt="${produto.name}">`
-        }
+        <img
+          src="${normalizarImagem(produto)}"
+          alt="${produto.name}"
+          loading="lazy"
+          decoding="async"
+          onerror="this.src='../img/hot-dog.png'"
+        >
       </div>
       <div class="menu-card-body">
         <span class="menu-card-category">${categoriaTexto(produto)}</span>

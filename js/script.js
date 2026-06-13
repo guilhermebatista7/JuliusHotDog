@@ -4,35 +4,35 @@ const fallbackProducts = [
     name: 'Tradicional',
     description: 'Duas salsichas, batata palha, milho, maionese, ketchup e mostarda.',
     price: 14.00,
-    image_url: './img/hotdog-tradicional.png'
+    image_url: './img/hotdog-tradicional.webp'
   },
   {
     id: 2,
     name: 'Frango',
     description: 'Duas salsichas, frango desfiado, batata palha, milho, maionese, ketchup e mostarda.',
     price: 18.00,
-    image_url: './img/hotdog-frango.png'
+    image_url: './img/hotdog-frango.webp'
   },
   {
     id: 3,
     name: 'Pizza',
     description: 'Duas salsichas, presunto, mucarela, tomate, oregano, batata palha, milho, maionese, ketchup e mostarda.',
     price: 18.00,
-    image_url: './img/hotdog-pizza.png'
+    image_url: './img/hotdog-pizza.webp'
   },
   {
     id: 4,
     name: 'Chefe',
     description: 'Duas salsichas, rucula, requeijao cremoso, alho frito, batata palha, milho, maionese, ketchup e mostarda.',
     price: 18.00,
-    image_url: './img/hotdog-chefe.png'
+    image_url: './img/hotdog-chefe.webp'
   },
   {
     id: 5,
     name: 'Bacon',
     description: 'Duas salsichas, bacon, batata palha, milho, maionese, ketchup e mostarda.',
     price: 20.00,
-    image_url: './img/hotdog-bacon.png'
+    image_url: './img/hotdog-bacon.webp'
   }
 ];
 
@@ -77,7 +77,7 @@ function renderProducts() {
 
   grid.innerHTML = homeProducts.map((product) => `
     <div class="card">
-      <img src="${getProductImage(product)}" alt="${product.name}">
+      <img src="${getProductImage(product)}" alt="${product.name}" loading="lazy" decoding="async">
       <h3>${product.name}</h3>
       <p style="font-size: 0.85rem; color: #888; margin: 10px 0;">${product.description}</p>
       <div style="color: #fff; font-weight: bold; font-size: 1.4rem; margin-bottom: 15px;">${formatCurrency(product.price)}</div>
@@ -94,9 +94,9 @@ function getProductImage(product) {
     return image;
   }
 
-  if (name.includes('frango')) return './img/hotdog-frango.png';
-  if (name.includes('bacon')) return './img/hotdog-bacon.png';
-  return './img/hotdog-tradicional.png';
+  if (name.includes('frango')) return './img/hotdog-frango.webp';
+  if (name.includes('bacon')) return './img/hotdog-bacon.webp';
+  return './img/hotdog-tradicional.webp';
 }
 
 function addToCart(id, event) {

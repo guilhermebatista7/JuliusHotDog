@@ -11,7 +11,7 @@ function mapProductPayload(body) {
   const beverageType = category === 'drink' && body.beverageType === 'bottle' ? 'bottle' : (category === 'drink' ? 'can' : null);
   const defaultImage = category === 'drink'
     ? './img/hot-dog.png'
-    : './img/hotdog-tradicional.png';
+    : './img/hotdog-tradicional.webp';
 
   return {
     name: body.name,

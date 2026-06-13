@@ -154,7 +154,7 @@ body {
 /* --- HERO SECTION --- */
 .hero {
     height: 100vh;
-    background: url("../img/logo.png") center no-repeat;
+    background: url("../img/logo.webp") center no-repeat;
     background-size: 40%;
     display: flex; 
     align-items: center; 

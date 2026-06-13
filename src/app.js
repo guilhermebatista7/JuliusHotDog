@@ -13,7 +13,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(attachSession);
 app.use(protectHtmlPages);
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..'), {
+  setHeaders(res, filePath) {
+    if (/\.(png|webp|jpe?g|gif|svg)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+    }
+  }
+}));
 
 app.use('/', webRoutes);
 app.use('/api', apiRoutes);
