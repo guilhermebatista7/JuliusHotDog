@@ -26,3 +26,21 @@ async function apiRequest(path, options = {}) {
 
   return payload;
 }
+
+async function showAdminMenuItems() {
+  const adminMenuItems = document.querySelectorAll('[data-admin-only]');
+  if (!adminMenuItems.length) return;
+
+  try {
+    const session = await apiRequest('/auth/me');
+    if (session?.data?.role === 'admin') {
+      adminMenuItems.forEach((item) => {
+        item.hidden = false;
+      });
+    }
+  } catch (_error) {
+    // The menu remains hidden when the session cannot be confirmed.
+  }
+}
+
+document.addEventListener('DOMContentLoaded', showAdminMenuItems);
