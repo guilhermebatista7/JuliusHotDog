@@ -125,8 +125,8 @@ function renderProductList(containerId, products) {
           >
             <i class="fas ${produto.active ? 'fa-eye-slash' : 'fa-eye'}"></i>
           </button>
-          <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
-          <button onclick="excluirProduto(${produto.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></button>
+          <button class="product-action edit-product" onclick="editarProduto(${produto.id})" title="Editar produto" aria-label="Editar produto"><i class="fas fa-edit"></i></button>
+          <button class="product-action delete-product" onclick="excluirProduto(${produto.id})" title="Excluir produto" aria-label="Excluir produto"><i class="fas fa-trash"></i></button>
         </div>
       </div>
     `;
