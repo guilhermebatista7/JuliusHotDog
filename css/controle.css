@@ -122,15 +122,6 @@
 .product-card-adm h4, .insumo-card-adm h4 { font-size: 1.2rem; margin-bottom: 8px; color: #fff; }
 .product-card-adm p, .insumo-card-adm p { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
 
-.admin-product-image {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    border-radius: 8px;
-    background: #050505;
-    margin-bottom: 14px;
-}
-
 .empty-admin-msg {
     color: #777;
     background: #111;

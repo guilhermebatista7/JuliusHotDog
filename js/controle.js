@@ -100,7 +100,6 @@ function renderProductList(containerId, products) {
     return `
       <div class="product-card-adm">
         <div>
-          <img src="${getProductImage(produto)}" alt="${produto.name}" class="admin-product-image">
           <h4>${produto.name}</h4>
           <p>${produto.description}</p>
           <span class="price">${formatCurrency(produto.price)}</span>
