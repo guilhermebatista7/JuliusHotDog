@@ -82,6 +82,11 @@ function categoriaTexto(produto) {
   return obterCategoria(produto) === 'drink' ? 'Bebida' : 'Hot Dog';
 }
 
+function hasCustomBeverageImage(produto) {
+  const image = String(produto.image_url || produto.imagem || '');
+  return image && !image.endsWith('/hot-dog.png') && !image.endsWith('hot-dog.png');
+}
+
 async function carregarProdutos() {
   try {
     const response = await apiRequest('/products?active=true');
@@ -99,13 +104,16 @@ function renderizarCardapio(categoria = 'todos') {
   menuGrid.innerHTML = produtosFiltrados.map((produto) => `
     <article class="menu-card">
       <div class="menu-card-image">
-        <img
-          src="${normalizarImagem(produto)}"
-          alt="${produto.name}"
-          loading="lazy"
-          decoding="async"
-          onerror="this.src='../img/hot-dog.png'"
-        >
+        ${obterCategoria(produto) === 'drink' && !hasCustomBeverageImage(produto)
+          ? `<i class="fas ${getBeverageIcon(produto)}" aria-label="${produto.name}"></i>`
+          : `<img
+              src="${normalizarImagem(produto)}"
+              alt="${produto.name}"
+              loading="lazy"
+              decoding="async"
+              onerror="this.src='../img/hot-dog.png'"
+            >`
+        }
       </div>
       <div class="menu-card-body">
         <span class="menu-card-category">${categoriaTexto(produto)}</span>

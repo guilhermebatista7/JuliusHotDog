@@ -2,7 +2,7 @@ const productModel = require('../models/ProductModel');
 const HttpError = require('../utils/httpError');
 const { success } = require('../utils/apiResponse');
 
-function mapProductPayload(body) {
+function mapProductPayload(body, existingProduct = null) {
   const normalizedActive = body.active === undefined
     ? true
     : body.active === true || body.active === 'true' || body.active === 1 || body.active === '1';
@@ -17,7 +17,7 @@ function mapProductPayload(body) {
     name: body.name,
     description: body.description,
     price: Number(body.price),
-    imageUrl: body.imageUrl || defaultImage,
+    imageUrl: body.imageUrl || existingProduct?.image_url || defaultImage,
     active: normalizedActive,
     category,
     beverageType,
@@ -68,7 +68,7 @@ async function updateProduct(req, res) {
     throw new HttpError(404, 'Produto nao encontrado.');
   }
 
-  const payload = mapProductPayload(req.body);
+  const payload = mapProductPayload(req.body, existingProduct);
   validateProductPayload(payload);
 
   const product = await productModel.update(req.params.id, payload);

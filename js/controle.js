@@ -308,6 +308,9 @@ async function salvarProduto(event) {
   event.preventDefault();
 
   const id = document.getElementById('prod-id').value;
+  const existingProduct = id
+    ? PRODUTOS.find((product) => Number(product.id) === Number(id))
+    : null;
   const category = document.getElementById('prod-category').value;
   const beverageType = document.getElementById('prod-beverage-type').value;
   const rawDescription = document.getElementById('prod-desc').value;
@@ -318,11 +321,14 @@ async function salvarProduto(event) {
       ? `${rawDescription} ${drinkSuffix}`
       : rawDescription,
     price: Number(document.getElementById('prod-preco').value),
-    imageUrl: getProductImage({
-      name: document.getElementById('prod-nome').value,
-      category
-    }),
+    imageUrl: category === 'drink'
+      ? existingProduct?.image_url
+      : getProductImage({
+        name: document.getElementById('prod-nome').value,
+        category
+      }),
     category,
+    beverageType,
     active: true,
     supplies: getSelectedProductSupplies()
   };
