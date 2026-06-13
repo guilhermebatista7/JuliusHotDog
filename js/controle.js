@@ -187,31 +187,35 @@ function renderProductSupplyFields(selectedSupplies = []) {
     const quantity = selected?.quantity_required ??
       selected?.quantityRequired ??
       (insumo.is_boolean ? 0 : 1);
-    const unlinkButton = checked
-      ? `<button type="button" class="btn-unlink-supply" onclick="desvincularInsumoProduto(${insumo.id})">Desvincular</button>`
-      : '<span class="ingredient-state">Nao vinculado</span>';
+    const stateText = isRequired ? 'Vinculado' : 'Nao vinculado';
 
     return `
       <div class="ingredient-row">
         <label>
-          <input type="checkbox" class="prod-supply-check" data-supply-id="${insumo.id}" ${checked}>
+          <input
+            type="checkbox"
+            class="prod-supply-check"
+            data-supply-id="${insumo.id}"
+            onchange="atualizarEstadoInsumo(${insumo.id}, this.checked)"
+            ${checked}
+          >
           ${insumo.name}
         </label>
         <div class="ingredient-controls">
           ${insumo.is_boolean ? '<span class="ingredient-state">checkbox</span>' : `
             <input type="number" class="prod-supply-qty" data-supply-id="${insumo.id}" value="${quantity}" min="0" step="0.1">
           `}
-          ${unlinkButton}
+          <span class="ingredient-state" data-supply-state="${insumo.id}">${stateText}</span>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function desvincularInsumoProduto(supplyId) {
-  const checkbox = document.querySelector(`.prod-supply-check[data-supply-id="${supplyId}"]`);
-  if (checkbox) {
-    checkbox.checked = false;
+function atualizarEstadoInsumo(supplyId, isLinked) {
+  const state = document.querySelector(`[data-supply-state="${supplyId}"]`);
+  if (state) {
+    state.textContent = isLinked ? 'Vinculado' : 'Nao vinculado';
   }
 }
 

@@ -203,15 +203,6 @@
     font-size: 0.8rem;
 }
 
-.btn-unlink-supply {
-    background: #2a1111;
-    border: 1px solid #7a2b2b;
-    color: #ff9a9a;
-    border-radius: 6px;
-    padding: 8px 10px;
-    cursor: pointer;
-}
-
 .inline-stock-edit {
     display: flex;
     gap: 8px;
