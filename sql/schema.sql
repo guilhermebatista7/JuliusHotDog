@@ -161,7 +161,7 @@ INSERT INTO products (id, name, description, price, image_url, category, stock_q
 (3, 'Pizza', 'Duas salsichas, presunto, mucarela, tomate, oregano, batata palha, milho, maionese, ketchup e mostarda.', 18.00, './img/hotdog-pizza.webp', 'snack', 100, TRUE),
 (4, 'Chefe', 'Duas salsichas, rucula, requeijao cremoso, alho frito, batata palha, milho, maionese, ketchup e mostarda.', 18.00, './img/hotdog-chefe.webp', 'snack', 100, TRUE),
 (5, 'Bacon', 'Duas salsichas, bacon, batata palha, milho, maionese, ketchup e mostarda.', 20.00, './img/hotdog-bacon.webp', 'snack', 100, TRUE),
-(6, 'Coca-Cola 350ml', 'Refrigerante Coca-Cola lata 350ml.', 6.00, './img/hot-dog.png', 'drink', 100, TRUE),
+(6, 'Coca-Cola 350ml', 'Refrigerante Coca-Cola lata 350ml.', 6.00, './img/coca-cola-350ml.webp', 'drink', 100, TRUE),
 (7, 'Guarana 350ml', 'Refrigerante Guarana lata 350ml.', 5.00, './img/guarana-350ml.webp', 'drink', 100, TRUE),
 (8, 'Fanta 350ml', 'Refrigerante Fanta lata 350ml.', 5.00, './img/fanta-350ml.webp', 'drink', 100, TRUE),
 (9, 'Agua sem gas', 'Garrafa de agua mineral sem gas.', 3.00, './img/agua-sem-gas.webp', 'drink', 100, TRUE),

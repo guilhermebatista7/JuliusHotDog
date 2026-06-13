@@ -15,6 +15,7 @@ WHERE LOWER(name) IN ('tradicional', 'frango', 'pizza', 'chefe', 'bacon')
 UPDATE products
 SET category = 'drink',
     image_url = CASE
+      WHEN id = 6 THEN './img/coca-cola-350ml.webp'
       WHEN id = 7 THEN './img/guarana-350ml.webp'
       WHEN id = 8 THEN './img/fanta-350ml.webp'
       WHEN id = 9 THEN './img/agua-sem-gas.webp'
