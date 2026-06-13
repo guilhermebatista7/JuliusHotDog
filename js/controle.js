@@ -328,12 +328,7 @@ async function salvarProduto(event) {
       ? `${rawDescription} ${drinkSuffix}`
       : rawDescription,
     price,
-    imageUrl: category === 'drink'
-      ? existingProduct?.image_url
-      : getProductImage({
-        name: document.getElementById('prod-nome').value,
-        category
-      }),
+    imageUrl: existingProduct?.image_url,
     category,
     beverageType,
     active: true,

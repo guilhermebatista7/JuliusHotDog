@@ -82,7 +82,7 @@ function categoriaTexto(produto) {
   return obterCategoria(produto) === 'drink' ? 'Bebida' : 'Hot Dog';
 }
 
-function hasCustomBeverageImage(produto) {
+function hasCustomProductImage(produto) {
   const image = String(produto.image_url || produto.imagem || '');
   return image && !image.endsWith('/hot-dog.png') && !image.endsWith('hot-dog.png');
 }
@@ -107,8 +107,8 @@ function renderizarCardapio(categoria = 'todos') {
   menuGrid.innerHTML = produtosFiltrados.map((produto) => `
     <article class="menu-card">
       <div class="menu-card-image">
-        ${obterCategoria(produto) === 'drink' && !hasCustomBeverageImage(produto)
-          ? `<i class="fas ${getBeverageIcon(produto)}" aria-label="${produto.name}"></i>`
+        ${!hasCustomProductImage(produto)
+          ? `<i class="fas ${getProductIcon(produto)}" aria-label="${produto.name}"></i>`
           : `<img
               src="${normalizarImagem(produto)}"
               alt="${produto.name}"
@@ -133,7 +133,11 @@ function renderizarCardapio(categoria = 'todos') {
   `).join('');
 }
 
-function getBeverageIcon(produto) {
+function getProductIcon(produto) {
+  if (obterCategoria(produto) !== 'drink') {
+    return 'fa-hotdog';
+  }
+
   const text = `${produto.name || ''} ${produto.description || ''}`.toLowerCase();
   return text.includes('garrafa') || text.includes('agua') || text.includes('água') ? 'fa-bottle-water' : 'fa-glass-water';
 }

@@ -9,9 +9,7 @@ function mapProductPayload(body, existingProduct = null) {
 
   const category = body.category === 'drink' || body.category === 'bebida' ? 'drink' : 'snack';
   const beverageType = category === 'drink' && body.beverageType === 'bottle' ? 'bottle' : (category === 'drink' ? 'can' : null);
-  const defaultImage = category === 'drink'
-    ? './img/hot-dog.png'
-    : './img/hotdog-tradicional.webp';
+  const defaultImage = './img/hot-dog.png';
 
   return {
     name: body.name,
