@@ -98,7 +98,10 @@ async function carregarProdutos() {
 
 function renderizarCardapio(categoria = 'todos') {
   const produtosFiltrados = categoria === 'todos'
-    ? produtosCardapio
+    ? [...produtosCardapio].sort((a, b) => {
+      const categoryOrder = { snack: 0, drink: 1 };
+      return categoryOrder[obterCategoria(a)] - categoryOrder[obterCategoria(b)];
+    })
     : produtosCardapio.filter((produto) => obterCategoria(produto) === categoria);
 
   menuGrid.innerHTML = produtosFiltrados.map((produto) => `

@@ -314,13 +314,20 @@ async function salvarProduto(event) {
   const category = document.getElementById('prod-category').value;
   const beverageType = document.getElementById('prod-beverage-type').value;
   const rawDescription = document.getElementById('prod-desc').value;
+  const price = Number(document.getElementById('prod-preco').value);
+
+  if (!Number.isFinite(price) || price <= 0) {
+    alert('O preco do produto deve ser maior que zero.');
+    return;
+  }
+
   const drinkSuffix = beverageType === 'bottle' ? 'Garrafa.' : 'Lata.';
   const payload = {
     name: document.getElementById('prod-nome').value,
     description: category === 'drink' && !rawDescription.toLowerCase().includes(drinkSuffix.toLowerCase())
       ? `${rawDescription} ${drinkSuffix}`
       : rawDescription,
-    price: Number(document.getElementById('prod-preco').value),
+    price,
     imageUrl: category === 'drink'
       ? existingProduct?.image_url
       : getProductImage({

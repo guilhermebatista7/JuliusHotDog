@@ -37,6 +37,10 @@ function validateProductPayload(payload) {
   if (!payload.name || !payload.description || Number.isNaN(payload.price)) {
     throw new HttpError(400, 'Nome, descricao e preco sao obrigatorios.');
   }
+
+  if (payload.price <= 0) {
+    throw new HttpError(400, 'O preco do produto deve ser maior que zero.');
+  }
 }
 
 async function listProducts(req, res) {

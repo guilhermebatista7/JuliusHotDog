@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   name VARCHAR(120) NOT NULL,
   description TEXT NOT NULL,
-  price DECIMAL(10, 2) NOT NULL,
+  price DECIMAL(10, 2) NOT NULL CHECK (price > 0),
   image_url VARCHAR(255) DEFAULT './img/hotdog-tradicional.webp',
   category VARCHAR(20) NOT NULL DEFAULT 'snack',
   stock_quantity INT NOT NULL DEFAULT 100,
