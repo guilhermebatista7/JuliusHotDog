@@ -48,5 +48,38 @@ async function handleRegister(event) {
   }
 }
 
+async function handleLogout() {
+  try {
+    await apiRequest('/auth/logout', {
+      method: 'POST',
+      redirectOnUnauthorized: false
+    });
+  } catch (_error) {
+    // The local session data is cleared even if the server session already expired.
+  }
+
+  localStorage.removeItem('julios_user');
+  window.location.reload();
+}
+
+async function loadAccount() {
+  const loginContainer = document.getElementById('loginContainer');
+  const accountContainer = document.getElementById('accountContainer');
+
+  try {
+    const response = await apiRequest('/auth/me', {
+      redirectOnUnauthorized: false
+    });
+
+    document.getElementById('accountName').textContent = response.data.name;
+    accountContainer.hidden = false;
+  } catch (_error) {
+    loginContainer.hidden = false;
+  }
+}
+
 document.getElementById('login-form').addEventListener('submit', handleLogin);
 document.getElementById('register-form').addEventListener('submit', handleRegister);
+document.getElementById('logoutButton').addEventListener('click', handleLogout);
+
+loadAccount();

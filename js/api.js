@@ -1,13 +1,18 @@
 const API_BASE_URL = '/api';
 
 async function apiRequest(path, options = {}) {
+  const {
+    redirectOnUnauthorized = true,
+    ...requestOptions
+  } = options;
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     credentials: 'same-origin',
+    ...requestOptions,
     headers: {
       'Content-Type': 'application/json',
-      ...(options.headers || {})
-    },
-    ...options
+      ...(requestOptions.headers || {})
+    }
   });
 
   const contentType = response.headers.get('content-type') || '';
@@ -16,7 +21,7 @@ async function apiRequest(path, options = {}) {
     : null;
 
   if (!response.ok) {
-    if (response.status === 401 && path !== '/auth/login') {
+    if (response.status === 401 && path !== '/auth/login' && redirectOnUnauthorized) {
       window.location.href = '/login';
       return null;
     }

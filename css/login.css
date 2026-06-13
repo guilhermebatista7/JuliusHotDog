@@ -29,6 +29,29 @@
     position: relative;
 }
 
+.login-container[hidden],
+.account-container[hidden] {
+    display: none;
+}
+
+.account-container {
+    width: 380px;
+}
+
+.account-card {
+    width: 100%;
+    min-height: 320px;
+    background: var(--card-bg);
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+}
+
 .flip-card {
     width: 100%;
     height: 100%;
@@ -127,5 +150,5 @@ input:focus { border-color: var(--fire); box-shadow: 0 0 10px rgba(121, 48, 17, 
 
 /* Responsividade */
 @media (max-width: 400px) {
-    .login-container { width: 90%; }
+    .login-container, .account-container { width: 90%; }
 }

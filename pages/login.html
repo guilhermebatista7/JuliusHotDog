@@ -31,7 +31,7 @@
         </div>
     </header>
 
-    <div class="login-container">
+    <div class="login-container" id="loginContainer" hidden>
         <div class="flip-card" id="flipCard">
             
             <div class="card-front">
@@ -76,6 +76,15 @@
                 </div>
             </div>
             
+        </div>
+    </div>
+
+    <div class="account-container" id="accountContainer" hidden>
+        <div class="account-card">
+            <span class="loader-emoji"><img src="../img/hot-dog.png" alt="" style="width: 40px;"></span>
+            <h2>OLÁ, <span id="accountName"></span></h2>
+            <p>Você já está conectado.</p>
+            <button type="button" class="btn-login" id="logoutButton">SAIR</button>
         </div>
     </div>
 
