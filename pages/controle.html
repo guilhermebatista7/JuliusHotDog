@@ -72,18 +72,51 @@
             </div>
 
             <div id="tab-vendas" class="tab-content">
-                <div class="header-flex">
-                    <h2>Performance Financeira</h2>
-                    <div class="report-filters">
-                        <select id="report-month"></select>
-                        <input type="number" id="report-year" min="2020" step="1">
-                        <label class="checkbox-row compact">
-                            <input type="checkbox" id="report-full-year">
-                            Ano todo
-                        </label>
-                        <button type="button" onclick="carregarRelatorios()">Buscar</button>
+                <div class="report-hero">
+                    <div>
+                        <span class="report-eyebrow">Visão financeira</span>
+                        <h2>Relatórios de vendas</h2>
+                        <p>Acompanhe os pedidos aceitos por dia, mês ou ano.</p>
+                    </div>
+                    <div class="report-period-badge" id="report-period-label">Hoje</div>
+                </div>
+
+                <div class="report-filter-panel">
+                    <div class="report-period-tabs" role="group" aria-label="Período do relatório">
+                        <button type="button" class="report-period-btn active" data-report-period="day" onclick="setReportPeriod('day')">
+                            <i class="fas fa-calendar-day"></i> Dia
+                        </button>
+                        <button type="button" class="report-period-btn" data-report-period="month" onclick="setReportPeriod('month')">
+                            <i class="fas fa-calendar-alt"></i> Mês
+                        </button>
+                        <button type="button" class="report-period-btn" data-report-period="year" onclick="setReportPeriod('year')">
+                            <i class="fas fa-calendar"></i> Ano
+                        </button>
+                    </div>
+
+                    <div class="report-filter-fields">
+                        <div class="report-filter-field" data-period-field="day">
+                            <label for="report-date">Escolha o dia</label>
+                            <input type="date" id="report-date">
+                        </div>
+                        <div class="report-filter-field" data-period-field="month" hidden>
+                            <label for="report-month">Escolha o mês</label>
+                            <select id="report-month"></select>
+                        </div>
+                        <div class="report-filter-field" data-period-field="month" hidden>
+                            <label for="report-month-year">Ano</label>
+                            <input type="number" id="report-month-year" min="2020" step="1">
+                        </div>
+                        <div class="report-filter-field" data-period-field="year" hidden>
+                            <label for="report-year">Escolha o ano</label>
+                            <input type="number" id="report-year" min="2020" step="1">
+                        </div>
+                        <button class="report-search-btn" type="button" onclick="carregarRelatorios()">
+                            <i class="fas fa-search"></i> Atualizar relatório
+                        </button>
                     </div>
                 </div>
+
                 <div class="reports-grid">
                     <div class="report-card">
                         <div class="icon-circle money"><i class="fas fa-dollar-sign"></i></div>
@@ -97,6 +130,13 @@
                         <div class="report-info">
                             <span>Pedidos aceitos</span>
                             <h3 id="total-pedidos">0</h3>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <div class="icon-circle ticket"><i class="fas fa-receipt"></i></div>
+                        <div class="report-info">
+                            <span>Ticket médio</span>
+                            <h3 id="ticket-medio">R$ 0,00</h3>
                         </div>
                     </div>
                 </div>

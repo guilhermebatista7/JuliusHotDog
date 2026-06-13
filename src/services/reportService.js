@@ -3,20 +3,44 @@ const productModel = require('../models/ProductModel');
 const supplyModel = require('../models/SupplyModel');
 const userModel = require('../models/UserModel');
 
-function buildDateFilter({ month, year, fullYear } = {}) {
+function localDateStart(year, month, day = 1) {
+  const monthText = String(month).padStart(2, '0');
+  const dayText = String(day).padStart(2, '0');
+  return new Date(`${year}-${monthText}-${dayText}T00:00:00-03:00`);
+}
+
+function buildDateFilter({ period, date, month, year } = {}) {
   const now = new Date();
+  const selectedPeriod = ['day', 'month', 'year'].includes(period) ? period : 'month';
   const selectedYear = Number(year || now.getFullYear());
   const selectedMonth = Number(month || now.getMonth() + 1);
-  const useFullYear = fullYear === true || fullYear === 'true' || fullYear === '1';
-  const startMonthIndex = useFullYear ? 0 : selectedMonth - 1;
-  const endMonthIndex = useFullYear ? 12 : selectedMonth;
+  const selectedDate = /^\d{4}-\d{2}-\d{2}$/.test(date || '')
+    ? date
+    : `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+  let startDate;
+  let endDate;
+
+  if (selectedPeriod === 'day') {
+    startDate = new Date(`${selectedDate}T00:00:00-03:00`);
+    endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+  } else if (selectedPeriod === 'year') {
+    startDate = localDateStart(selectedYear, 1);
+    endDate = localDateStart(selectedYear + 1, 1);
+  } else {
+    startDate = localDateStart(selectedYear, selectedMonth);
+    endDate = selectedMonth === 12
+      ? localDateStart(selectedYear + 1, 1)
+      : localDateStart(selectedYear, selectedMonth + 1);
+  }
 
   return {
+    period: selectedPeriod,
+    date: selectedDate,
     month: selectedMonth,
     year: selectedYear,
-    fullYear: useFullYear,
-    startDate: new Date(Date.UTC(selectedYear, startMonthIndex, 1)).toISOString(),
-    endDate: new Date(Date.UTC(selectedYear, endMonthIndex, 1)).toISOString()
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString()
   };
 }
 
@@ -32,13 +56,17 @@ async function getDashboardSummary(filters = {}) {
   return {
     revenue: Number(orderSummary.totalRevenue || 0),
     totalOrders: Number(orderSummary.totalOrders || 0),
+    averageTicket: orderSummary.totalOrders
+      ? Number(orderSummary.totalRevenue || 0) / Number(orderSummary.totalOrders)
+      : 0,
     totalProducts: products.length,
     totalSupplies: supplies.length,
     totalUsers: users.length,
     orders: orderSummary.orders || [],
+    period: dateFilter.period,
+    date: dateFilter.date,
     month: dateFilter.month,
-    year: dateFilter.year,
-    fullYear: dateFilter.fullYear
+    year: dateFilter.year
   };
 }
 

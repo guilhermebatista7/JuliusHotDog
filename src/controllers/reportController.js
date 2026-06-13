@@ -4,9 +4,10 @@ const { getDashboardSummary } = require('../services/reportService');
 
 async function getDashboard(req, res) {
   const report = await getDashboardSummary({
+    period: req.query.period,
+    date: req.query.date,
     month: req.query.month,
     year: req.query.year,
-    fullYear: req.query.fullYear
   });
   return success(res, report, 'Relatorio carregado com sucesso.');
 }

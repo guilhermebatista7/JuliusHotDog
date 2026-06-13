@@ -1,5 +1,6 @@
 let PRODUTOS = [];
 let INSUMOS = [];
+let REPORT_PERIOD = 'day';
 
 function formatCurrency(value) {
   return Number(value).toLocaleString('pt-BR', {
@@ -235,29 +236,51 @@ async function carregarInsumos() {
 }
 
 async function carregarRelatorios() {
-  const month = document.getElementById('report-month')?.value;
-  const year = document.getElementById('report-year')?.value;
-  const fullYear = document.getElementById('report-full-year')?.checked;
   const params = new URLSearchParams();
+  params.set('period', REPORT_PERIOD);
 
-  if (month) {
-    params.set('month', month);
+  if (REPORT_PERIOD === 'day') {
+    params.set('date', document.getElementById('report-date').value);
+  } else if (REPORT_PERIOD === 'month') {
+    params.set('month', document.getElementById('report-month').value);
+    params.set('year', document.getElementById('report-month-year').value);
+  } else {
+    params.set('year', document.getElementById('report-year').value);
   }
 
-  if (year) {
-    params.set('year', year);
-  }
-
-  if (fullYear) {
-    params.set('fullYear', 'true');
-  }
-
-  const query = params.toString() ? `?${params.toString()}` : '';
-  const response = await apiRequest(`/reports/dashboard${query}`);
+  const response = await apiRequest(`/reports/dashboard?${params.toString()}`);
   const report = response.data;
   document.getElementById('fat-hoje').innerText = formatCurrency(report.revenue);
   document.getElementById('total-pedidos').innerText = report.totalOrders;
+  document.getElementById('ticket-medio').innerText = formatCurrency(report.averageTicket);
+  document.getElementById('report-period-label').innerText = getReportPeriodLabel(report);
   renderReportOrders(report.orders || []);
+}
+
+function getReportPeriodLabel(report) {
+  if (report.period === 'day') {
+    const [year, month, day] = report.date.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
+  if (report.period === 'year') {
+    return `Ano de ${report.year}`;
+  }
+
+  const monthName = document.querySelector(`#report-month option[value="${report.month}"]`)?.textContent;
+  return `${monthName || 'Mês'} de ${report.year}`;
+}
+
+function setReportPeriod(period) {
+  REPORT_PERIOD = period;
+
+  document.querySelectorAll('[data-report-period]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.reportPeriod === period);
+  });
+
+  document.querySelectorAll('[data-period-field]').forEach((field) => {
+    field.hidden = field.dataset.periodField !== period;
+  });
 }
 
 function formatOrderItems(items = []) {
@@ -521,8 +544,10 @@ async function excluirInsumo(id) {
 
 function setupReportFilters() {
   const monthSelect = document.getElementById('report-month');
+  const dateInput = document.getElementById('report-date');
+  const monthYearInput = document.getElementById('report-month-year');
   const yearInput = document.getElementById('report-year');
-  if (!monthSelect || !yearInput) {
+  if (!monthSelect || !dateInput || !monthYearInput || !yearInput) {
     return;
   }
 
@@ -534,7 +559,15 @@ function setupReportFilters() {
   monthSelect.innerHTML = monthNames.map((name, index) => `
     <option value="${index + 1}" ${index === now.getMonth() ? 'selected' : ''}>${name}</option>
   `).join('');
+  const localToday = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0')
+  ].join('-');
+  dateInput.value = localToday;
+  monthYearInput.value = now.getFullYear();
   yearInput.value = now.getFullYear();
+  setReportPeriod('day');
 }
 
 function setupMenu() {
