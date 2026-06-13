@@ -22,7 +22,7 @@
                     <li><a href="index.html" class="active-link">HOME</a></li>
                     <li><a href="pages/cardapio.html">CARDÁPIO</a></li>
                     <li><a href="pages/login.html">LOGIN</a></li>
-                    <li class="cart-btn" onclick="toggleCart()">
+                    <li class="cart-btn" onclick="location.href='pages/carrinho.html'">
                         <img src="./img/carrinho-de-compras.png" alt="Carrinho" class="icon-cart" style="width: 30px; height: 30px;">
                         <span id="cart-count">0</span>
                     </li>
@@ -50,24 +50,6 @@
         <div class="grid-cards" id="product-grid"></div>
     </main>
 
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-side-panel">
-            <div class="cart-header">
-                <h3>SEU PEDIDO</h3>
-                <button class="close-btn" onclick="toggleCart()">X</button>
-            </div>
-            <div id="cart-items-list" class="cart-body">
-                </div>
-            <div class="cart-footer">
-                <div class="total-box">
-                    <span>TOTAL</span>
-                    <span id="cart-total">R$ 0,00</span>
-                </div>
-                <textarea id="order-note" placeholder="Alguma observação?"></textarea>
-                <a class="btn-checkout" href="pages/carrinho.html" style="display:block; text-align:center; color:#ffffff; margin-top:15px; text-decoration:none; font-size:0.8rem;">VER CARRINHO COMPLETO</a>
-            </div>
-        </div>
-    </div>
     <section class="location-section">
         <div class="section-header">
             <h2>ONDE ESTAMOS</h2>

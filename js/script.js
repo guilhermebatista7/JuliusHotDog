@@ -137,34 +137,10 @@ function saveAndRefresh() {
   updateUI();
 }
 
-function removeItem(index) {
-  cart.splice(index, 1);
-  saveAndRefresh();
-}
-
 function updateUI() {
-  const list = document.getElementById('cart-items-list');
-  const total = document.getElementById('cart-total');
   const count = document.getElementById('cart-count');
   const count2 = document.getElementById('cart-count2');
-  const totalValue = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-
-  if (list) {
-    list.innerHTML = cart.map((item, index) => `
-      <div class="cart-item-mini" style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
-        <div>
-          <div style="font-weight:bold; font-size:0.9rem">${item.name} (x${item.quantity})</div>
-          <div style="color:var(--fire)">${formatCurrency(item.price * item.quantity)}</div>
-        </div>
-        <button onclick="removeItem(${index})" style="background:none; border:none; color:#ff4757; cursor:pointer; font-size:1.2rem">x</button>
-      </div>
-    `).join('');
-  }
-
-  if (total) {
-    total.innerText = formatCurrency(totalValue);
-  }
 
   if (count) {
     count.innerText = totalItems;
@@ -175,15 +151,6 @@ function updateUI() {
     count2.innerText = totalItems;
     count2.style.display = totalItems > 0 ? 'flex' : 'none';
   }
-}
-
-function toggleCart() {
-  const modal = document.getElementById('cartModal');
-  if (!modal) {
-    return;
-  }
-
-  modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
 }
 
 function setupMenu() {

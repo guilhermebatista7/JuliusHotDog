@@ -72,11 +72,26 @@ async function loadAccount() {
     });
 
     document.getElementById('accountName').textContent = response.data.name;
-    document.getElementById('homeMenuItem').hidden = false;
+    document.querySelectorAll('[data-auth-menu]').forEach((item) => {
+      item.hidden = false;
+    });
+    updateAccountCartCount();
     accountContainer.hidden = false;
   } catch (_error) {
     loginContainer.hidden = false;
   }
+}
+
+function updateAccountCartCount() {
+  const cart = JSON.parse(localStorage.getItem('julios_cart')) || [];
+  const totalItems = cart.reduce(
+    (total, item) => total + Number(item.quantity || item.quantidade || 1),
+    0
+  );
+  const count = document.getElementById('cart-count');
+
+  count.textContent = totalItems;
+  count.style.display = totalItems > 0 ? 'flex' : 'none';
 }
 
 document.getElementById('login-form').addEventListener('submit', handleLogin);

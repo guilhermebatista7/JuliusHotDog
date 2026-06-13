@@ -31,7 +31,7 @@
 
 .login-container[hidden],
 .account-container[hidden],
-#homeMenuItem[hidden] {
+[data-auth-menu][hidden] {
     display: none;
 }
 

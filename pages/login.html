@@ -18,8 +18,13 @@
 
             <nav class="nav-menu" id="navMenu">
                 <ul>
-                    <li id="homeMenuItem" hidden><a href="../index.html">HOME</a></li>
+                    <li data-auth-menu hidden><a href="../index.html">HOME</a></li>
+                    <li data-auth-menu hidden><a href="cardapio.html">CARDÁPIO</a></li>
                     <li><a href="login.html" class="active-link">LOGIN</a></li>
+                    <li class="cart-btn" data-auth-menu hidden onclick="location.href='carrinho.html'">
+                        <img src="../img/carrinho-de-compras.png" alt="Carrinho" class="icon-cart" style="width: 30px; height: 30px;">
+                        <span id="cart-count">0</span>
+                    </li>
                 </ul>
             </nav>
 
