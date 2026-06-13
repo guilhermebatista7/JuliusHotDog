@@ -33,6 +33,8 @@ async function buildOrderItems(items) {
       unitPrice: Number(product.price),
       quantity,
       lineTotal: calculateLineTotal(product.price, quantity),
+      category: product.category,
+      stockQuantity: Number(product.stock_quantity || 0),
       supplies: product.supplies || []
     });
   }
@@ -101,17 +103,58 @@ async function ensureSuppliesAvailable(items) {
   return usage;
 }
 
-async function debitSupplies(items) {
-  const usage = await ensureSuppliesAvailable(items);
-
+async function debitSupplies(usage) {
   for (const { supply, needed } of Object.values(usage.unitUsage)) {
     await supplyModel.updateQuantity(supply.id, Number(supply.quantity) - needed);
   }
 }
 
+function buildBeverageUsage(items) {
+  return items.reduce((usage, item) => {
+    if (item.category !== 'drink') {
+      return usage;
+    }
+
+    const existing = usage[item.productId] || {
+      productId: item.productId,
+      productName: item.productName,
+      stockQuantity: item.stockQuantity,
+      needed: 0
+    };
+
+    existing.needed += item.quantity;
+    usage[item.productId] = existing;
+    return usage;
+  }, {});
+}
+
+function ensureBeveragesAvailable(items) {
+  const usage = buildBeverageUsage(items);
+  const missing = Object.values(usage)
+    .filter(({ stockQuantity, needed }) => stockQuantity < needed)
+    .map(({ productName, stockQuantity, needed }) =>
+      `${productName} (${needed} necessario, ${stockQuantity} disponivel)`
+    );
+
+  if (missing.length > 0) {
+    throw new HttpError(400, `Nao foi possivel enviar o pedido. Bebidas sem estoque: ${missing.join(', ')}.`);
+  }
+
+  return usage;
+}
+
+async function debitBeverages(usage) {
+  for (const { productId, stockQuantity, needed } of Object.values(usage)) {
+    await productModel.updateStock(productId, stockQuantity - needed);
+  }
+}
+
 async function createOrder(payload) {
   const items = await buildOrderItems(payload.items);
-  await debitSupplies(items);
+  const supplyUsage = await ensureSuppliesAvailable(items);
+  const beverageUsage = ensureBeveragesAvailable(items);
+  await debitSupplies(supplyUsage);
+  await debitBeverages(beverageUsage);
   const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
   const deliveryFee = 0;
   const total = subtotal + deliveryFee;
@@ -134,6 +177,7 @@ async function createOrder(payload) {
 async function createOrderRequest(payload) {
   const items = await buildOrderItems(payload.items);
   await ensureSuppliesAvailable(items);
+  ensureBeveragesAvailable(items);
   const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
   const deliveryFee = 0;
   const total = subtotal + deliveryFee;

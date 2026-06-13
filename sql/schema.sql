@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS products (
   price DECIMAL(10, 2) NOT NULL CHECK (price > 0),
   image_url VARCHAR(255) DEFAULT './img/hot-dog.png',
   category VARCHAR(20) NOT NULL DEFAULT 'snack',
-  stock_quantity INT NOT NULL DEFAULT 100,
+  stock_quantity INT NOT NULL DEFAULT 100
+    CONSTRAINT products_stock_quantity_nonnegative CHECK (stock_quantity >= 0),
   active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

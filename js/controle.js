@@ -106,7 +106,9 @@ function renderProductList(containerId, products) {
           <h4>${produto.name}</h4>
           <p>${produto.description}</p>
           <span class="price">${formatCurrency(produto.price)}</span>
-          <p>${isDrink ? `Tipo: ${getBeverageType(produto) === 'bottle' ? 'Garrafa' : 'Lata'}` : `Insumos: ${supplyNames || 'Nenhum insumo vinculado'}`}</p>
+          <p>${isDrink
+            ? `Tipo: ${getBeverageType(produto) === 'bottle' ? 'Garrafa' : 'Lata'} | Estoque: ${Number(produto.stock_quantity || 0)} un.`
+            : `Insumos: ${supplyNames || 'Nenhum insumo vinculado'}`}</p>
         </div>
         <div class="card-actions">
           <button onclick="editarProduto(${produto.id})" style="background:none; border:none; color:#3498db; cursor:pointer;"><i class="fas fa-edit"></i></button>
@@ -333,9 +335,15 @@ async function salvarProduto(event) {
   const beverageType = document.getElementById('prod-beverage-type').value;
   const rawDescription = document.getElementById('prod-desc').value;
   const price = Number(document.getElementById('prod-preco').value);
+  const stockQuantity = Number(document.getElementById('prod-stock-quantity').value);
 
   if (!Number.isFinite(price) || price <= 0) {
     alert('O preco do produto deve ser maior que zero.');
+    return;
+  }
+
+  if (category === 'drink' && (!Number.isInteger(stockQuantity) || stockQuantity < 0)) {
+    alert('Informe as unidades da bebida com um numero inteiro maior ou igual a zero.');
     return;
   }
 
@@ -349,6 +357,7 @@ async function salvarProduto(event) {
     imageUrl: existingProduct?.image_url,
     category,
     beverageType,
+    stockQuantity: category === 'drink' ? stockQuantity : undefined,
     active: true,
     supplies: getSelectedProductSupplies()
   };
@@ -386,6 +395,7 @@ function editarProduto(id) {
   document.getElementById('prod-preco').value = produto.price;
   document.getElementById('prod-category').value = getProductCategory(produto);
   document.getElementById('prod-beverage-type').value = getBeverageType(produto);
+  document.getElementById('prod-stock-quantity').value = Number(produto.stock_quantity || 0);
   document.getElementById('modal-prod-title').innerText = 'Editar Produto';
   renderProductSupplyFields(produto.supplies || []);
   toggleProductCategory();
@@ -400,10 +410,23 @@ function getBeverageType(product) {
 function toggleProductCategory() {
   const category = document.getElementById('prod-category')?.value || 'snack';
   const drinkTypeGroup = document.getElementById('drink-type-group');
+  const drinkStockGroup = document.getElementById('drink-stock-group');
+  const stockInput = document.getElementById('prod-stock-quantity');
   const ingredientsGroup = document.getElementById('prod-insumos')?.closest('.input-group-admin');
 
   if (drinkTypeGroup) {
     drinkTypeGroup.style.display = category === 'drink' ? 'flex' : 'none';
+  }
+
+  if (drinkStockGroup) {
+    drinkStockGroup.style.display = category === 'drink' ? 'flex' : 'none';
+  }
+
+  if (stockInput) {
+    stockInput.required = category === 'drink';
+    if (category !== 'drink') {
+      stockInput.value = '';
+    }
   }
 
   if (ingredientsGroup) {

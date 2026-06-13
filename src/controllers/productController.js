@@ -10,6 +10,9 @@ function mapProductPayload(body, existingProduct = null) {
   const category = body.category === 'drink' || body.category === 'bebida' ? 'drink' : 'snack';
   const beverageType = category === 'drink' && body.beverageType === 'bottle' ? 'bottle' : (category === 'drink' ? 'can' : null);
   const defaultImage = './img/hot-dog.png';
+  const stockQuantity = category === 'drink'
+    ? Number(body.stockQuantity ?? body.stock_quantity)
+    : Number(existingProduct?.stock_quantity ?? 100);
 
   return {
     name: body.name,
@@ -19,6 +22,7 @@ function mapProductPayload(body, existingProduct = null) {
     active: normalizedActive,
     category,
     beverageType,
+    stockQuantity,
     supplies: Array.isArray(body.supplies)
       ? body.supplies.map((supply) => ({
         supplyId: Number(supply.supplyId ?? supply.supply_id),
@@ -38,6 +42,11 @@ function validateProductPayload(payload) {
 
   if (payload.price <= 0) {
     throw new HttpError(400, 'O preco do produto deve ser maior que zero.');
+  }
+
+  if (payload.category === 'drink' &&
+      (!Number.isInteger(payload.stockQuantity) || payload.stockQuantity < 0)) {
+    throw new HttpError(400, 'As unidades da bebida devem ser um numero inteiro maior ou igual a zero.');
   }
 }
 
