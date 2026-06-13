@@ -30,7 +30,8 @@
 }
 
 .login-container[hidden],
-.account-container[hidden] {
+.account-container[hidden],
+#homeMenuItem[hidden] {
     display: none;
 }
 

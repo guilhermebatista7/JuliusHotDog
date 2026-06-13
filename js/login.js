@@ -72,6 +72,7 @@ async function loadAccount() {
     });
 
     document.getElementById('accountName').textContent = response.data.name;
+    document.getElementById('homeMenuItem').hidden = false;
     accountContainer.hidden = false;
   } catch (_error) {
     loginContainer.hidden = false;
