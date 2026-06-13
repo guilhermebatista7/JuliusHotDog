@@ -162,10 +162,10 @@ INSERT INTO products (id, name, description, price, image_url, category, stock_q
 (4, 'Chefe', 'Duas salsichas, rucula, requeijao cremoso, alho frito, batata palha, milho, maionese, ketchup e mostarda.', 18.00, './img/hotdog-chefe.png', 'snack', 100, TRUE),
 (5, 'Bacon', 'Duas salsichas, bacon, batata palha, milho, maionese, ketchup e mostarda.', 20.00, './img/hotdog-bacon.png', 'snack', 100, TRUE),
 (6, 'Coca-Cola 350ml', 'Refrigerante Coca-Cola lata 350ml.', 6.00, './img/hot-dog.png', 'drink', 100, TRUE),
-(7, 'Guarana 350ml', 'Refrigerante Guarana lata 350ml.', 5.00, './img/hot-dog.png', 'drink', 100, TRUE),
-(8, 'Fanta 350ml', 'Refrigerante Fanta lata 350ml.', 5.00, './img/hot-dog.png', 'drink', 100, TRUE),
-(9, 'Agua sem gas', 'Garrafa de agua mineral sem gas.', 3.00, './img/hot-dog.png', 'drink', 100, TRUE),
-(10, 'Agua com gas', 'Garrafa de agua mineral com gas.', 3.00, './img/hot-dog.png', 'drink', 100, TRUE);
+(7, 'Guarana 350ml', 'Refrigerante Guarana lata 350ml.', 5.00, './img/guarana-350ml.png', 'drink', 100, TRUE),
+(8, 'Fanta 350ml', 'Refrigerante Fanta lata 350ml.', 5.00, './img/fanta-350ml.png', 'drink', 100, TRUE),
+(9, 'Agua sem gas', 'Garrafa de agua mineral sem gas.', 3.00, './img/agua-sem-gas.png', 'drink', 100, TRUE),
+(10, 'Agua com gas', 'Garrafa de agua mineral com gas.', 3.00, './img/agua-com-gas.png', 'drink', 100, TRUE);
 
 SELECT setval('products_id_seq', (SELECT MAX(id) FROM products));
 

@@ -14,7 +14,13 @@ WHERE LOWER(name) IN ('tradicional', 'frango', 'pizza', 'chefe', 'bacon')
 
 UPDATE products
 SET category = 'drink',
-    image_url = './img/hot-dog.png'
+    image_url = CASE
+      WHEN id = 7 THEN './img/guarana-350ml.png'
+      WHEN id = 8 THEN './img/fanta-350ml.png'
+      WHEN id = 9 THEN './img/agua-sem-gas.png'
+      WHEN id = 10 THEN './img/agua-com-gas.png'
+      ELSE image_url
+    END
 WHERE LOWER(name) LIKE '%350ml%'
    OR LOWER(description) LIKE '%lata%'
    OR LOWER(description) LIKE '%garrafa%'
