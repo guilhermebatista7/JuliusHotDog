@@ -164,14 +164,26 @@ function renderProductSupplyFields(selectedSupplies = []) {
   }
 
   const selectedBySupplyId = selectedSupplies.reduce((acc, supply) => {
-    acc[Number(supply.supply_id)] = supply;
+    const supplyId = Number(
+      supply.supply_id ??
+      supply.supplyId ??
+      supply.supply?.id
+    );
+
+    if (Number.isFinite(supplyId)) {
+      acc[supplyId] = supply;
+    }
+
     return acc;
   }, {});
 
   container.innerHTML = INSUMOS.map((insumo) => {
     const selected = selectedBySupplyId[Number(insumo.id)];
-    const checked = selected?.required ? 'checked' : '';
-    const quantity = selected?.quantity_required ?? (insumo.is_boolean ? 0 : 1);
+    const isRequired = selected && selected.required !== false && selected.required !== 'false';
+    const checked = isRequired ? 'checked' : '';
+    const quantity = selected?.quantity_required ??
+      selected?.quantityRequired ??
+      (insumo.is_boolean ? 0 : 1);
     const unlinkButton = checked
       ? `<button type="button" class="btn-unlink-supply" onclick="desvincularInsumoProduto(${insumo.id})">Desvincular</button>`
       : '<span class="ingredient-state">Nao vinculado</span>';
