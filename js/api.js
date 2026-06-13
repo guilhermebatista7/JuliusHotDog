@@ -28,18 +28,24 @@ async function apiRequest(path, options = {}) {
 }
 
 async function showAdminMenuItems() {
-  const adminMenuItems = document.querySelectorAll('[data-admin-only]');
-  if (!adminMenuItems.length) return;
+  const menus = document.querySelectorAll('[data-control-href]');
+  if (!menus.length) return;
 
   try {
     const session = await apiRequest('/auth/me');
     if (session?.data?.role === 'admin') {
-      adminMenuItems.forEach((item) => {
-        item.hidden = false;
+      menus.forEach((menu) => {
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+
+        link.href = menu.dataset.controlHref;
+        link.textContent = 'CONTROLE';
+        item.appendChild(link);
+        menu.insertBefore(item, menu.querySelector('.cart-btn'));
       });
     }
   } catch (_error) {
-    // The menu remains hidden when the session cannot be confirmed.
+    // No control link is created when the session cannot be confirmed.
   }
 }
 
