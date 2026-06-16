@@ -1,0 +1,432 @@
+
+Instituto Federal de Educação, Ciência e Tecnologia de São Paulo - Catanduva
+curso Superior Tecnologia em análise e Desenvolvimento de Sistemas
+Relatório de: CTDPEX1 – Projeto de Extensão 1 - 1º semestre 2026
+Professor: Fábio Luiz Viana 
+
+
+Relatório de Extensão modalidade Prestação de Serviço – Projeto de Software
+
+Nome / Título do Sistema:  Julius Hot Dog - 2ª fase (Desenvolvimento Web, Back-end e Integrações)
+
+Equipe: Eduardo Lemes / Ruan Almagro
+
+Público-alvo: Clientes do food truck Julius Hot Dog, principalmente estudantes do IFSP e CETEC, além do próprio Julius como administrador do sistema.
+
+Carga-horária total da ação: 35 horas
+
+Importância extensionista: O projeto foi desenvolvido a partir da observação direta do funcionamento do food truck Julius Hot Dog, identificando dificuldades reais como demora no atendimento, falta de controle de estoque e ausência de um cardápio digital.
+A solução proposta tem grande impacto social e prático, pois melhora a experiência dos clientes, reduz erros operacionais e auxilia o empreendedor a organizar seu negócio, especialmente em horários de pico. Além disso, fortalece a relação entre tecnologia e comunidade local.
+
+Plataforma do sistema (desktop, web, mobile, ou mais de uma):  Sistema Web
+
+Objetivo Geral: Desenvolver um sistema web para otimizar o processo de pedidos, controle de estoque, cardápio digital, aprovação via WhatsApp e atendimento ao cliente do Julius Hot Dog.
+
+Objetivos Específicos (quando for o caso): 
+Criar um cardápio online interativo
+Permitir ajuste de quantidades e inclusão de observações no carrinho
+Implementar controle de estoque por insumos e por unidades de bebidas
+Organizar solicitações de pedidos com aprovação pelo Julius via WhatsApp
+Integrar aprovação e retorno de pedidos pela WhatsApp Cloud API da Meta
+Disponibilizar painel administrativo para produtos, insumos, disponibilidade, estoque e relatórios
+
+
+Metodologia e Avaliação do ciclo de vida (software):
+A metodologia adotada para o desenvolvimento do sistema será baseada em uma abordagem incremental, inspirada em práticas ágeis, permitindo a construção do software de forma progressiva e organizada. Inicialmente, foi realizado o levantamento de requisitos, seguido da modelagem do sistema, onde foram definidos os principais componentes e fluxos. Em seguida, será efetuado o desenvolvimento por partes, implementando funcionalidades gradualmente. Durante todo o processo, serão realizados testes contínuos para garantir o correto funcionamento das funcionalidades, finalizando com ajustes e melhorias conforme necessário.
+A avaliação do sistema será conduzida com base em critérios práticos e funcionais, visando garantir sua qualidade e eficiência. Serão realizados testes de funcionamento das funcionalidades implementadas, além de simulações de pedidos para validar o fluxo completo do sistema. Também será feita a verificação da usabilidade, analisando se a interface é intuitiva e de fácil utilização. Por fim, o sistema será validado junto ao cliente, assegurando que a solução atenda às necessidades reais do negócio.
+
+
+
+Especificações técnicas:
+
+Ciclo de Vida do Desenvolvimento Back-end 
+O desenvolvimento do back-end do sistema Julius Hot Dog segue um ciclo de vida organizado em etapas, permitindo que a construção da aplicação seja realizada de forma estruturada, iniciando pela definição da arquitetura, passando pela modelagem e implementação do banco de dados, desenvolvimento das APIs, criação das regras de negócio e finalizando com testes e validações.
+Cada etapa possui uma carga horária definida de acordo com sua complexidade e importância dentro do desenvolvimento da solução.
+Etapa
+Atividade
+Descrição Detalhada
+Horas
+1
+Planejamento Técnico do Back-end
+Definição da arquitetura da aplicação, organização do projeto, escolha das tecnologias utilizadas (Node.js, Express.js, JavaScript, Supabase/PostgreSQL e WhatsApp Cloud API da Meta), definição dos padrões de comunicação entre front-end, API, Supabase e integrações externas.
+4h
+2
+Modelagem do Banco de Dados
+Criação da estrutura de dados do sistema, definição das entidades principais (users, products, supplies, product_supplies, order_requests, orders e order_items), relacionamentos e regras de integridade.
+5h
+3
+Implementação e Integração do Banco de Dados
+Criação das tabelas no banco PostgreSQL, configuração da conexão com o back-end, criação das operações de inserção, consulta, atualização e exclusão dos dados por meio da API REST do Supabase.
+5h
+4
+Desenvolvimento da API RESTful
+Desenvolvimento dos endpoints responsáveis pela comunicação do sistema, incluindo cadastro de usuários, autenticação, gerenciamento de produtos, pedidos e controle de estoque.
+6h
+5
+Implementação das Regras de Negócio
+Desenvolvimento da lógica interna do sistema, incluindo validação dos pedidos, aprovação pelo Julius via WhatsApp, atualização automática do estoque e controle de disponibilidade dos produtos.
+5h
+6
+Desenvolvimento do Painel Administrativo
+Implementação das funcionalidades utilizadas pelo Julius, como gerenciamento de produtos, vínculo de insumos, controle de estoque, disponibilidade de itens e visualização dos relatórios administrativos.
+6h
+7
+Segurança e Controle de Acesso
+Implementação das validações de usuários, permissões administrativas, proteção das rotas da API e tratamento seguro das informações armazenadas.
+2h
+8
+Testes e Validação do Back-end
+Realização de testes das rotas, integração com banco de dados, verificação das respostas da API, identificação e correção de erros encontrados durante o desenvolvimento.
+2h
+
+Carga horária total prevista: 35 horas
+Estrutura Back-end do Sistema Julius Hot Dog
+Durante o desenvolvimento do sistema Julius Hot Dog, uma das principais preocupações foi estruturar uma base sólida para que todas as funcionalidades planejadas pudessem ser implementadas de maneira organizada, segura e escalável. Para isso, foi definida uma arquitetura de back-end responsável por intermediar a comunicação entre o usuário, as regras de negócio e o banco de dados.
+O back-end funciona como o núcleo operacional do sistema, sendo responsável por receber solicitações do front-end, validar informações, executar processos internos e retornar respostas adequadas. Dentro do contexto do Julius Hot Dog, essa camada é essencial para controlar todo o fluxo da operação, desde o cadastro de clientes até o gerenciamento de pedidos, produtos e estoque.
+Para garantir uma melhor organização do desenvolvimento, o projeto foi estruturado utilizando uma arquitetura baseada em rotas, controladores, modelos e serviços. Essa divisão permite que cada parte do sistema tenha uma responsabilidade específica, facilitando a manutenção, testes e futuras expansões do sistema.
+A API desenvolvida utiliza o conceito RESTful, onde cada recurso do sistema possui seus próprios endpoints responsáveis pelas operações de criação, consulta, atualização e exclusão de dados. Dessa forma, o sistema consegue representar digitalmente os processos realizados atualmente no food truck, mantendo a simplicidade operacional e permitindo que novas funcionalidades sejam adicionadas futuramente.
+Estrutura das Rotas da API
+
+Organização e Funcionamento das Rotas
+A estrutura do back-end foi organizada separando as funcionalidades do sistema em diferentes módulos de rotas. Cada arquivo dentro da pasta routes representa um conjunto de operações relacionadas a uma determinada área do sistema.
+Essa divisão permite que o código permaneça organizado e facilita o crescimento da aplicação, evitando que todas as funcionalidades fiquem concentradas em um único arquivo.
+O fluxo de funcionamento segue o modelo:
+Requisição do usuário → Rota → Controller → Model → Banco de Dados → Resposta da API
+Ou seja, quando um usuário realiza uma ação no sistema, como realizar login ou criar um pedido, a solicitação é encaminhada para a rota correspondente. A rota direciona a ação para o controlador responsável, que executa as regras necessárias e realiza a comunicação com o banco de dados.
+authRoutes.js — Rotas de Autenticação
+O módulo de autenticação é responsável pelo gerenciamento dos usuários do sistema, controlando o acesso e identificando os diferentes perfis existentes.
+Dentro do Julius Hot Dog, existem dois principais usuários:
+Cliente;
+Administrador (Julius).
+As rotas desse módulo são utilizadas principalmente nas telas de cadastro e login.
+1 Cadastro de usuário
+Responsável por criar novos clientes no sistema.
+Exemplo:
+POST /api/auth/register
+Utilizado na tela: Cadastro de Cliente
+Dados enviados:
+nome;
+telefone;
+email;
+senha.
+2 Login
+Responsável por validar os dados de acesso.
+Exemplo:
+POST /api/auth/login
+Utilizado na tela: Login do Cliente / Administrador
+Após a autenticação, o sistema identifica o tipo de usuário e libera as permissões correspondentes.
+productRoutes.js — Gerenciamento de Produtos
+Essa rota controla todas as operações relacionadas ao cardápio do Julius Hot Dog.
+Ela é utilizada tanto pelo cliente quanto pelo administrador.
+Para o cliente, permite consultar os produtos disponíveis.
+Para o administrador, permite gerenciar o cardápio.
+1 Cliente
+Tela: Cardápio
+Consulta produtos:
+GET /api/products
+Retorna informações como:
+nome;
+descrição;
+preço;
+imagem;
+disponibilidade;
+categoria;
+unidades em estoque, quando for bebida.
+Exemplo:
+{
+"nome": "Hot Dog Especial",
+"preco": 18.00,
+"disponivel": true
+}
+2 Administrador
+Tela: Gerenciamento de Produtos
+Operações disponíveis:
+Criar produto:
+POST /api/products
+Atualizar:
+PUT /api/products/:id
+Excluir:
+DELETE /api/products/:id
+Essa área permite que Julius mantenha o cardápio atualizado, oculte itens temporariamente e vincule insumos aos lanches.
+orderRoutes.js — Gerenciamento de Pedidos
+A rota de pedidos representa uma das principais funcionalidades do sistema, pois controla todo o fluxo da venda.
+Ela conecta diretamente:
+Cliente → Solicitação de pedido → WhatsApp do Julius → Pedido confirmado
+1 Criação de Pedido
+Quando o cliente finaliza uma compra:
+POST /api/orders/request
+O sistema registra:
+cliente;
+produtos escolhidos;
+quantidade;
+valor total;
+observações;
+status da solicitação;
+e envia o resumo para aprovação do Julius pelo WhatsApp.
+Inicialmente a solicitação do pedido fica em order_requests como:
+pending, aguardando aceite ou recusa pelo WhatsApp
+2 Consulta de Pedido
+Permite visualizar informações de uma venda específica.
+GET /api/orders/:id
+Utilizado para acompanhar:
+detalhes do pedido;
+status no banco;
+situação atual.
+
+3 Alteração de Status
+Responsável pela decisão recebida pelo WhatsApp e pela atualização administrativa do pedido.
+PATCH /api/orders/:id/status
+O sistema trabalha com os status:
+order_requests: pending
+order_requests: accepted
+order_requests: denied
+orders: pending / preparing / delivered / cancelled
+Exemplo:
+Julius recebe o pedido:
+Pedido #15
+2 Hot Dogs
+Após verificar disponibilidade:
+Aceita pelo WhatsApp:
+accepted
+ou recusa:
+denied
+supplyRoutes.js — Controle de Estoque
+Essa rota representa o gerenciamento dos insumos utilizados na produção.
+Ela é responsável por controlar ingredientes como:
+pão;
+salsicha;
+molhos;
+adicionais.
+Tela: Controle / Insumos
+Principais operações:
+Adicionar estoque:
+POST /api/supplies
+Atualizar quantidade:
+PUT /api/supplies/:id
+Consultar estoque:
+GET /api/supplies
+Quando o pedido é aceito pelo WhatsApp, o sistema realiza a baixa automática dos insumos utilizados e das unidades de bebidas vendidas.
+reportRoutes.js — Relatórios
+Responsável pela geração de informações administrativas.
+Tela: Controle / Relatórios
+Possibilita visualizar:
+faturamento;
+quantidade de pedidos aceitos;
+ticket médio;
+lista de pedidos aceitos no período.
+Exemplos:
+GET /api/reports/dashboard?period=day&date=AAAA-MM-DD
+GET /api/reports/dashboard?period=month&month=MM&year=AAAA
+Essas informações auxiliam Julius na tomada de decisões.
+whatsappRoutes.js — Integração com WhatsApp
+Essa rota tem como objetivo integrar o sistema com o fluxo atual de comunicação utilizado pelo Julius.
+Após o cliente realizar um pedido, o sistema gera uma mensagem contendo:
+cliente;
+pedido;
+produtos;
+observações;
+valor total;
+botões Aceitar e Negar.
+Exemplo:
+POST /api/whatsapp/webhook
+A funcionalidade mantém uma característica importante do negócio: o contato direto entre cliente e comerciante, agora com aprovação operacional via botões no WhatsApp e retorno automático ao cliente.
+apiRoutes.js — Controle Geral da API
+Essa rota funciona como uma camada geral do sistema.
+Ela pode ser utilizada para:
+agrupar as rotas da aplicação;
+montar os módulos de autenticação, produtos, insumos, pedidos, relatórios e WhatsApp;
+aplicar os middlewares de autenticação necessários.
+Exemplo:
+GET /api/reports/public-config
+Retorno:
+{
+"whatsappNumber":"número configurado",
+"deliveryFee":0
+}
+webRoutes.js — Serviços Web
+Atende as páginas do sistema, como home, login, carrinho e controle, além de servir os arquivos estáticos da aplicação web.
+Essas rotas retornam as páginas principais do sistema:
+home;
+login;
+cardápio e carrinho;
+controle administrativo.
+
+Considerações Finais
+A organização das rotas do back-end permite que o Julius Hot Dog seja transformado em um sistema modular, onde cada funcionalidade possui sua própria responsabilidade. Essa separação facilita o desenvolvimento, manutenção e evolução da aplicação.
+Com essa arquitetura, o sistema consegue atender o funcionamento atual do food truck, digitalizando processos como pedidos, controle de estoque e gerenciamento administrativo, sem remover a característica principal do negócio: a proximidade entre Julius e seus clientes.
+A estrutura criada também permite futuras expansões, como pagamentos digitais, aplicativo mobile, integração completa com WhatsApp Business e novos pontos de venda.
+
+Resultados Obtidos:
+O desenvolvimento do back-end do sistema Julius Hot Dog resultou na criação de uma base estruturada para suportar as principais operações do sistema, com foco na organização de dados, comunicação entre aplicação e banco de dados e preparação das regras de negócio.
+Durante o desenvolvimento, foi implementada uma arquitetura organizada em camadas, separando responsabilidades entre rotas, controladores, modelos e serviços, permitindo maior facilidade de manutenção e evolução do sistema. A criação da API possibilitou estruturar os principais fluxos da aplicação, como cadastro de usuários, gerenciamento de produtos, controle de pedidos e integração com o estoque.
+A modelagem do banco de dados permitiu armazenar informações essenciais para o funcionamento do sistema, relacionando clientes, produtos, insumos, solicita??es de pedidos, pedidos definitivos e itens de pedido. Essa estrutura possibilita futuras implementações como baixa automática de estoque, geração de relatórios e acompanhamento histórico das vendas.
+Outro resultado importante foi a preparação das rotas responsáveis pelo gerenciamento das funcionalidades administrativas, permitindo que o sistema tenha controle sobre autorizações de pedidos, atualização de status e manutenção dos dados cadastrados.
+Dessa forma, os resultados obtidos no back-end estão alinhados aos objetivos iniciais do projeto, criando uma estrutura funcional, escalável e preparada para integração com o frontend, possibilitando a evolução do sistema para uma aplicação completa.
+
+
+Lições Aprendidas: 
+O desenvolvimento do back-end do sistema Julius Hot Dog proporcionou aprendizados importantes não apenas relacionados à programação, mas também à análise e compreensão de um sistema aplicado a uma situação real. Durante o projeto, foi possível perceber que a construção de uma solução eficiente depende de uma boa compreensão do funcionamento do negócio antes mesmo da implementação do código.
+Uma das principais lições aprendidas foi a importância da organização da arquitetura do sistema. A separação entre rotas, controladores, modelos e serviços mostrou-se essencial para manter o código mais limpo, facilitar a correção de erros e permitir que novas funcionalidades sejam adicionadas futuramente sem comprometer a estrutura existente.
+Outro aprendizado relevante foi relacionado ao desenvolvimento de APIs e à comunicação entre diferentes partes do sistema. A criação das rotas demonstrou como o back-end atua como uma ponte entre o usuário e o banco de dados, recebendo informações, validando regras e retornando respostas para o frontend. Esse processo reforçou a importância de criar endpoints bem definidos e com responsabilidades claras.
+Além disso, o projeto trouxe uma visão mais prática sobre modelagem de dados. Foi necessário pensar não apenas em tabelas isoladas, mas em como as informações se relacionam dentro do funcionamento real do Julius Hot Dog, como pedidos consumindo produtos, produtos utilizando insumos e usuários interagindo com diferentes funcionalidades.
+Também foi possível compreender que o desenvolvimento de sistemas para negócios reais envolve fatores além da tecnologia. Questões como fluxo de atendimento, horários de pico, controle de estoque e necessidades do empreendedor influenciam diretamente nas decisões técnicas. Esse contato com a realidade do negócio ajudou a desenvolver uma visão mais completa sobre análise, planejamento e desenvolvimento de software.
+Por fim, o projeto reforçou a importância de testes, ajustes e evolução contínua durante o desenvolvimento. Erros encontrados durante a configuração do ambiente, conexão com banco de dados e criação das rotas contribuíram para um aprendizado prático sobre resolução de problemas e adaptação, preparando a estrutura do back-end para as próximas etapas do sistema.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Referências Bibliográficas
+
+As referências abaixo foram selecionadas considerando os principais conceitos utilizados no desenvolvimento do back-end do projeto Julius Hot Dog, incluindo desenvolvimento de APIs REST, arquitetura de sistemas, banco de dados, autenticação, modelagem e boas práticas de programação.
+
+NODE.JS. Node.js Documentation.
+ Disponível em: https://nodejs.org/docs/
+ Acesso em: 10 jun. 2026.
+Referência utilizada para fundamentação da execução da aplicação back-end em JavaScript, organização dos módulos e uso dos recursos nativos da plataforma Node.js.
+
+EXPRESS.JS. Express.js Documentation.
+ Disponível em: https://expressjs.com/
+ Acesso em: 10 jun. 2026.
+Utilizada como base para criação das rotas HTTP, middlewares, controllers e estrutura da API REST utilizada pelo sistema.
+
+POSTGRESQL GLOBAL DEVELOPMENT GROUP. PostgreSQL Documentation.
+ Disponível em: https://www.postgresql.org/docs/
+ Acesso em: 05 jun. 2026.
+Referência utilizada para criação e gerenciamento do banco de dados relacional utilizado pelo sistema, incluindo tabelas, relacionamentos, consultas e integridade dos dados.
+
+SUPABASE. Supabase Documentation.
+ Disponível em: https://supabase.com/docs
+ Acesso em: 10 jun. 2026.
+Utilizada como referência para integração com o banco PostgreSQL, uso da API REST do Supabase, autenticação por chave de API e organização das tabelas persistidas pelo sistema.
+
+FIELDING, Roy Thomas. Architectural Styles and the Design of Network-based Software Architectures.
+ University of California, Irvine, 2000.
+Disponível em:
+ https://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm
+Referência utilizada para compreensão do modelo REST, arquitetura aplicada na comunicação entre frontend, back-end e serviços da aplicação.
+
+FOWLER, Martin. Patterns of Enterprise Application Architecture.
+ Addison-Wesley, 2002.
+Livro utilizado como referência para organização da arquitetura do software, separação de responsabilidades, camadas da aplicação e boas práticas no desenvolvimento back-end.
+
+SOMMERVILLE, Ian. Engenharia de Software. 10. ed. São Paulo: Pearson, 2019.
+Referência utilizada para conceitos relacionados ao ciclo de vida do software, levantamento de requisitos, modelagem, desenvolvimento e testes da aplicação.
+
+DATE, C. J. Introdução a Sistemas de Bancos de Dados. 8. ed. Rio de Janeiro: Elsevier, 2004.
+Utilizada como base teórica para modelagem relacional, normalização, relacionamentos entre tabelas e organização dos dados persistidos no sistema.
+
+OWASP FOUNDATION. OWASP Top 10 — Web Application Security Risks.
+ Disponível em: https://owasp.org/www-project-top-ten/
+ Acesso em: 10 jun. 2026.
+Referência utilizada para boas práticas de segurança no desenvolvimento web, proteção de dados, autenticação e prevenção contra vulnerabilidades.
+
+META. WhatsApp Cloud API Documentation.
+ Disponível em: https://developers.facebook.com/docs/whatsapp/cloud-api/
+ Acesso em: 10 jun. 2026.
+Referência utilizada para integração com a API oficial do WhatsApp, configuração de webhook, envio de mensagens e utilização de templates.
+
+RENDER. Render Documentation.
+ Disponível em: https://render.com/docs
+ Acesso em: 10 jun. 2026.
+Referência utilizada para publicação da aplicação web, configuração do serviço Node.js e variáveis de ambiente.
+
+PRESSMAN, Roger S.; MAXIM, Bruce R. Engenharia de Software: Uma Abordagem Profissional. 9. ed. Porto Alegre: AMGH, 2021.
+Referência utilizada para fundamentar processos de desenvolvimento, documentação, testes e manutenção do sistema.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Anexos:
+
+I) Registro fotográfico
+
+
+
+
+
+
+
+
+
+
+  
+II) Repositório do sistema 
+
+Quando for o caso – endereço de repositório de códigos; local onde o sistema está disponível (como domínio ou site hospedado).
+
+https://julius-hot-dog.onrender.com/login
+
+Link do Projeto - Site Hospedado
+
+https://github.com/guilhermebatista7/JuliusHotDog
+Link do Projeto - Código Fonte Web
+
+https://github.com/guilhermebatista7/JuliusHotDog
+Link do Projeto - Documentação e Diagramação
+
+
+
+
